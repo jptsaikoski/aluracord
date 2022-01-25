@@ -13,6 +13,7 @@ import appConfig from '../config.json';
                   color: ${appConfig.theme.colors.neutrals['900']};
                   font-size: 24px;
                   font-weight: 600;
+                  margin-bottom: 23px;
               }
               `}</style>
       </>
@@ -40,10 +41,13 @@ export default function PaginaInicial() {
       <>
         <Box
           styleSheet={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-start',
             backgroundColor: appConfig.theme.colors.primary[500],
             backgroundImage: 'url(/static/images/background-2.gif)',
             backgroundRepeat: 'no-repeat', backgroundSize: 'cover',
+            padding: {
+              md: '48px',
+            }
           }}
         >
           
@@ -71,12 +75,60 @@ export default function PaginaInicial() {
 
               <Box styleSheet={{width: '20px', height: '20px', 
               backgroundColor: appConfig.theme.colors.neutrals['300'], 
-                borderRadius: '1px', border: '1px solid', 
-                borderColor: appConfig.theme.colors.neutrals['400']}}></Box>
+                borderRadius: '1px', border: '1px solid', marginRight: '8px',
+                borderColor: appConfig.theme.colors.neutrals['400'],
+                boxShadow: 'inset 1px 1px 0px 0px rgba(0,0,0,0)'}}></Box>
+
+              <Box styleSheet={{width: '100%', height: '28px', 
+              display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+
+                <div className="windowtop">
+                  <div className="listra"></div>
+                  <div className="listra"></div>
+                  <div className="listra"></div>
+                  <div className="listra"></div>
+                </div>
+
+              <Box styleSheet={{width: '100%', height: '28px', 
+              display: 'flex', justifyContent: 'center',alignItems: 'center',
+              paddingRight: '8px', paddingLeft: '8px'}}>
+
+                <Text variant="body3" styleSheet={{whiteSpace: 'nowrap',fontSize: '16px', fontWeight: '600', color: appConfig.theme.colors.neutrals[600] }}>
+                {appConfig.name}
+              </Text>
+
+              </Box>
+
+                <div className="windowtop">
+                  <div className="listra"></div>
+                  <div className="listra"></div>
+                  <div className="listra"></div>
+                  <div className="listra"></div>
+                </div>
+
+                <style jsx>{`
+                  .windowtop {
+                    width: 100%;
+                    height: 28px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                  }
+                  .listra {
+                    background-color: ${appConfig.theme.colors.neutrals['400']};
+                    width: 100%;
+                    height: 1px;
+                  }
+
+                `}</style>
+
+              </Box>
+
               <Box styleSheet={{width: '20px', height: '20px', 
               backgroundColor: appConfig.theme.colors.neutrals['300'], 
-                borderRadius: '1px', border: '1px solid', 
-                borderColor: appConfig.theme.colors.neutrals['400']}}></Box>
+                borderRadius: '1px', border: '1px solid', marginLeft: '8px',
+                borderColor: appConfig.theme.colors.neutrals['400'],
+                boxShadow: 'inset 1px 1px 0px 0px rgba(0,0,0,0)'}}></Box>
 
             </Box>
             <Box
@@ -110,10 +162,8 @@ export default function PaginaInicial() {
                 width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
               }}
             >
-              <Titulo tag="h2">Boas vindas de volta!</Titulo>
-              <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[400] }}>
-                {appConfig.name}
-              </Text>
+              <Titulo tag="h2">Bem vindo de volta!</Titulo>
+              
               
 
               <TextField
@@ -169,7 +219,7 @@ export default function PaginaInicial() {
                 flexDirection: 'column',
                 alignItems: 'center',
                 maxWidth: '200px',
-                padding: '36px',
+                padding: '32px',
                 backgroundColor: appConfig.theme.colors.neutrals[100],
                 border: '1px solid',
                 borderColor: appConfig.theme.colors.neutrals[400],
@@ -193,7 +243,9 @@ export default function PaginaInicial() {
                   color: appConfig.theme.colors.neutrals[900],
                   backgroundColor: '',
                   padding: '3px 10px',
-                  borderRadius: '1000px'
+                  borderRadius: '1000px',
+                  fontWeight: '500',
+                  fontSize: '14px'
                 }}
               >
                 {username}
