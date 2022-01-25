@@ -1,34 +1,7 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
+import React from 'react';
+import { useRouter } from 'next/router';
 import appConfig from '../config.json';
-
-function GlobalStyle() {
-    return (
-      <style global jsx>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          list-style: none;
-        }
-        body {
-          font-family: 'Open Sans', sans-serif;
-        }
-        /* App fit Height */ 
-        html, body, #__next {
-          min-height: 100vh;
-          display: flex;
-          flex: 1;
-        }
-        #__next {
-          flex: 1;
-        }
-        #__next > * {
-          flex: 1;
-        }
-        /* ./App fit Height */ 
-      `}</style>
-    );
-  }
 
   function Titulo(props) {
     const Tag = props.tag || 'h1';
@@ -40,28 +13,6 @@ function GlobalStyle() {
                   color: ${appConfig.theme.colors.neutrals['900']};
                   font-size: 24px;
                   font-weight: 600;
-              }
-              `}</style>
-      </>
-    );
-  }
-  function Video(props) {
-    const Src = props.src;
-    console.log(Src);
-    return (
-      <>
-        <video autoPlay muted loop>
-          <source src={Src} type="video/mp4"/>
-        </video>
-        
-        <style jsx>{`
-              video {
-                zindex: 1000;
-                position: fixed;
-  right: 0;
-  bottom: 0;
-  min-width: 100%;
-  min-height: 100%;
               }
               `}</style>
       </>
@@ -82,11 +33,11 @@ function GlobalStyle() {
 // export default HomePage
 
 export default function PaginaInicial() {
-    const username = 'jptsaikoski';
+    const [username, setUsername] = React.useState('jptsaikoski');
+    const roteamento = useRouter();
   
     return (
       <>
-        <GlobalStyle />
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -95,7 +46,6 @@ export default function PaginaInicial() {
             backgroundRepeat: 'no-repeat', backgroundSize: 'cover',
           }}
         >
-
           
           <Box
             styleSheet={{
@@ -151,6 +101,10 @@ export default function PaginaInicial() {
             {/* Formulário */}
             <Box
               as="form"
+              onSubmit={function (event) {
+                event.preventDefault();
+                roteamento.push('/chat');
+              }}
               styleSheet={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -160,10 +114,16 @@ export default function PaginaInicial() {
               <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[400] }}>
                 {appConfig.name}
               </Text>
-  
+              
+
               <TextField
                 fullWidth
                 rounded='none'
+                value={username}
+                onChange={function (event) {
+                  const valor = event.target.value;
+                  setUsername(valor);
+                }}
                 styleSheet={{
                   borderRadius: '2px',
                   boxShadow: 'inset 2px 3px 1px 0px rgba(0,0,0,0.16)',
