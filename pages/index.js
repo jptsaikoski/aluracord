@@ -56,6 +56,7 @@ function GlobalStyle() {
         
         <style jsx>{`
               video {
+                zindex: 1000;
                 position: fixed;
   right: 0;
   bottom: 0;
@@ -90,12 +91,11 @@ export default function PaginaInicial() {
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             backgroundColor: appConfig.theme.colors.primary[500],
-            backgroundImage: 'url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)',
-            backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
+            backgroundImage: 'url(/static/images/background-2.gif)',
+            backgroundRepeat: 'no-repeat', backgroundSize: 'cover',
           }}
         >
 
-          <Video src="../public/videos/background.mp4"></Video>
           
           <Box
             styleSheet={{
