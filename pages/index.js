@@ -35,8 +35,37 @@ import appConfig from '../config.json';
 
 export default function PaginaInicial() {
     const [username, setUsername] = React.useState('jptsaikoski');
+    const [usernameAfter, setUsernameAfter] = React.useState('jptsaikoski');
+    const [userData, setUserData] = React.useState({name: '', followers: 0, avatar_url: '', location: ''});
+    
+    React.useEffect(function () {
+
+      fetch(`https://api.github.com/users/${username}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setUserData(data);
+        console.log(userData);
+      });
+
+    },[])
+
+    function changeName(param) {
+      if (param.length > 2) {
+        setUsernameAfter(param);
+        console.log(usernameAfter);
+      } else {
+        setUsernameAfter('');
+      }
+    }
+    console.log('username: ' + username);
+    console.log('usernameAfter: ' + usernameAfter);
     const roteamento = useRouter();
-  
+
+    console.log(userData.avatar_url);
+    
+
     return (
       <>
         <Box
@@ -171,8 +200,10 @@ export default function PaginaInicial() {
                 rounded='none'
                 value={username}
                 onChange={function (event) {
+                  console.log('username no onChange: ' + username);
                   const valor = event.target.value;
                   setUsername(valor);
+                  changeName(valor);
                 }}
                 styleSheet={{
                   borderRadius: '2px',
@@ -235,7 +266,7 @@ export default function PaginaInicial() {
                   border: '1px solid',
                   borderColor: appConfig.theme.colors.neutrals['400']
                 }}
-                src={`https://github.com/${username}.png`}
+                src={`https://github.com/${usernameAfter}.png`}
               />
               <Text
                 variant="body4"
@@ -248,7 +279,7 @@ export default function PaginaInicial() {
                   fontSize: '14px'
                 }}
               >
-                {username}
+                {usernameAfter}
               </Text>
             </Box>
             {/* Photo Area */}
