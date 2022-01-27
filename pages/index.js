@@ -36,9 +36,9 @@ import appConfig from '../config.json';
 export default function PaginaInicial() {
     const [username, setUsername] = React.useState('jptsaikoski');
     const [usernameAfter, setUsernameAfter] = React.useState('jptsaikoski');
-    const [userData, setUserData] = React.useState({name: '', followers: 0, avatar_url: '', location: ''});
+    //const [userData, setUserData] = React.useState({name: '', followers: 0, avatar_url: '', location: ''});
     
-    React.useEffect(function () {
+    /*React.useEffect(function () {
 
       fetch(`https://api.github.com/users/${username}`)
       .then((response) => {
@@ -49,7 +49,7 @@ export default function PaginaInicial() {
         console.log(userData);
       });
 
-    },[])
+    },[])*/
 
     function changeName(param) {
       if (param.length > 2) {
@@ -63,7 +63,7 @@ export default function PaginaInicial() {
     console.log('usernameAfter: ' + usernameAfter);
     const roteamento = useRouter();
 
-    console.log(userData.avatar_url);
+    //console.log(userData.avatar_url);
     
 
     return (
