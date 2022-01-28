@@ -4,14 +4,19 @@ import appConfig from '../config.json';
 function GlobalStyle() {
     return (
       <style global jsx>{`
+        @font-face {
+          font-family: Chicago;
+          src: url(sysfont.woff2);
+        }
+
         * {
           margin: 0;
           padding: 0;
           box-sizing: border-box;
           list-style: none;
+          font-family: 'Chicago', sans-serif !important;
         }
         body {
-          font-family: 'Open Sans', sans-serif;
         }
         /* App fit Height */ 
         html, body, #__next {
@@ -47,16 +52,7 @@ export function Window(props) {
     return (
       <>
       {/* Janela da aplicação - INICIO */}
-      <Box styleSheet={{
-          display: 'flex', flexDirection: 'column', 
-          width: '100%', height: '100%',
-          padding: '2px',
-          borderRadius: '2px',
-          boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-          backgroundColor: appConfig.theme.colors.neutrals['300'],
-          border: '1px solid',
-          borderColor: appConfig.theme.colors.neutrals['400'],
-        }}>
+      <div className="window">
         
             {/* Topo da janela - INICIO */}
             <Box
@@ -95,7 +91,7 @@ export function Window(props) {
                   <Text 
                     variant="body3" 
                     styleSheet={{
-                      whiteSpace: 'nowrap',fontSize: '16px', fontWeight: '600', 
+                      whiteSpace: 'nowrap',fontSize: '16px', fontWeight: 'normal', 
                       color: appConfig.theme.colors.neutrals[600] }}>
                     {windowTitle}
                   </Text>
@@ -110,21 +106,7 @@ export function Window(props) {
                   <div className="listra"></div>
                 </div>
 
-                <style jsx>{`
-                  .windowtop {
-                    width: 100%;
-                    height: 28px;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-evenly;
-                  }
-                  .listra {
-                    background-color: ${appConfig.theme.colors.neutrals['400']};
-                    width: 100%;
-                    height: 1px;
-                  }
-
-                `}</style>
+                
 
               </Box>
               {/* Meio do topo - FIM */}
@@ -145,9 +127,48 @@ export function Window(props) {
 
             </Box>
             {/* Topo da janela - FIM */}
+            <Box styleSheet={{ border: '1px solid',
+                borderColor: appConfig.theme.colors.neutrals['400'],
+                borderTopColor: appConfig.theme.colors.neutrals['900'],
+                width: '100%', height: '100%', overflow: 'hidden'}}>
 
-        {props.children}
-      </Box>
+              {props.children}
+            </Box>
+      </div>
+      <style jsx>{`
+        @keyframes windowopen {
+          0% {opacity: 0.5; max-width: 0px; max-height: 0px}
+          70% {opacity: 1;}
+          100% {max-width: 1920px; max-height: 1920px}
+        }
+        
+        .window {
+          position: relative;
+          float: right;
+          display: flex; flex-direction: column;
+          width: 100%; height: 100%; 
+          padding: 2px; 
+          border-radius: 2px;
+          box-shadow: 0 2px 10px 0 rgb(0 0 0 / 20%);
+          background-color: ${appConfig.theme.colors.neutrals['300']};
+          border: 1px solid;
+          border-color: ${appConfig.theme.colors.neutrals['400']};
+          animation: windowopen 1s ease-out;
+        }
+        .windowtop {
+          width: 100%;
+          height: 28px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
+        }
+        .listra {
+          background-color: ${appConfig.theme.colors.neutrals['400']};
+          width: 100%;
+          height: 1px;
+        }
+
+      `}</style>
       {/* Janela da aplicação - FIM */}
       </>
     );

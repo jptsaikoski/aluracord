@@ -13,7 +13,7 @@ import { Window } from './_app.js';
               ${Tag} {
                   color: ${appConfig.theme.colors.neutrals['900']};
                   font-size: 24px;
-                  font-weight: 600;
+                  font-weight: normal;
                   margin-bottom: 23px;
               }
               `}</style>
@@ -76,6 +76,7 @@ export default function PaginaInicial() {
             backgroundImage: 'url(/static/images/background-1280.gif)',
             backgroundRepeat: 'no-repeat', backgroundSize: 'cover',
             padding: {
+              xs: '24px',
               md: '48px',
             }
           }}>
@@ -92,9 +93,6 @@ export default function PaginaInicial() {
               styleSheet={{
                 padding: '32px',
                 borderRadius: '2px',
-                border: '1px solid',
-                borderColor: appConfig.theme.colors.neutrals['400'],
-                borderTopColor: appConfig.theme.colors.neutrals['900'],
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
