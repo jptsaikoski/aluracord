@@ -1,6 +1,7 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
+import { Window } from './_app.js';
 
 export default function ChatPage() {
     
@@ -14,8 +15,9 @@ export default function ChatPage() {
             texto: novaMensagem,
         };
         setListaDeMensagens([
+            mensagemData,
             ...listaDeMensagens,
-            novaMensagem]);
+        ]);
         setMensagem('');
     }
 
@@ -24,56 +26,57 @@ export default function ChatPage() {
           styleSheet={{
             display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end',
             backgroundColor: appConfig.theme.colors.primary[500],
-            backgroundImage: 'url(/static/images/background-2.gif)',
+            backgroundImage: 'url(/static/images/background-1280.gif)',
             backgroundRepeat: 'no-repeat', backgroundSize: 'cover',
             padding: {
-              md: '48px',
+                xs: '24px',
+                md: '48px',
             }
-          }}
-        >
+          }}>
+
+        <Box 
+            styleSheet={{
+                height: '100%',
+                width: '100%',
+                maxWidth: {
+                    xs: '100%',
+                    md: '95%',
+                },
+                maxHeight: '95vh',
+            }}>
+            <Window windowTitle='Chat Global'>
             <Box
                 styleSheet={{
                     display: 'flex',
                     flexDirection: 'column',
                     flex: 1,
-                    boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-                    borderRadius: '5px',
-                    backgroundColor: appConfig.theme.colors.neutrals[700],
+                    backgroundColor: appConfig.theme.colors.neutrals[100],
                     height: '100%',
-                    maxWidth: '95%',
-                    maxHeight: '95vh',
+                    width: '100%',
                     padding: '32px',
-                }}
-            >
-                <Header />
+                }}>
+                <Header/>
                 <Box
                     styleSheet={{
                         position: 'relative',
                         display: 'flex',
                         flex: 1,
                         height: '80%',
-                        backgroundColor: appConfig.theme.colors.neutrals[600],
                         flexDirection: 'column',
-                        borderRadius: '5px',
+                        border: '1px solid',
+                        borderColor: appConfig.theme.colors.neutrals[400],
+                        borderRadius: '2px',
                         padding: '16px',
-                    }}
-                >
-                    {listaDeMensagens.map((mensagemAtual) => {
-                        console.log(mensagemAtual);
-                        return (
-                            <li>{mensagemAtual}</li>
-                        )
-
-                    })}
-                    {/* <MessageList mensagens={[]} /> */}
+                    }}>
+                    
+                    <MessageList mensagens={listaDeMensagens} />
 
                     <Box
                         as="form"
                         styleSheet={{
                             display: 'flex',
                             alignItems: 'center',
-                        }}
-                    >
+                        }}>
                         <TextField
                             value={mensagem}
                             onChange={(event) => {
@@ -94,16 +97,19 @@ export default function ChatPage() {
                                 width: '100%',
                                 border: '0',
                                 resize: 'none',
-                                borderRadius: '5px',
                                 padding: '6px 8px',
-                                backgroundColor: appConfig.theme.colors.neutrals[800],
+                                border: '1px solid',
+                                borderColor: appConfig.theme.colors.neutrals[400],
+                                borderRadius: '2px',
                                 marginRight: '12px',
-                                color: appConfig.theme.colors.neutrals[200],
-                            }}
-                        />
+                                color: appConfig.theme.colors.neutrals[700],
+                                backgroundColor: appConfig.theme.colors.neutrals[100],
+                            }}/>
                     </Box>
                 </Box>
             </Box>
+            </Window>
+        </Box>
         </Box>
     )
 }
@@ -112,11 +118,8 @@ function Header() {
     return (
         <>
             <Box styleSheet={{ width: '100%', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
-                <Text variant='heading5'>
-                    Chat
-                </Text>
                 <Button
-                    variant='tertiary'
+                    variant='secondary'
                     colorVariant='neutral'
                     label='Logout'
                     href="/"
@@ -127,7 +130,6 @@ function Header() {
 }
 
 function MessageList(props) {
-    console.log('MessageList', props);
     return (
         <Box
             tag="ul"
@@ -139,51 +141,61 @@ function MessageList(props) {
                 color: appConfig.theme.colors.neutrals["000"],
                 marginBottom: '16px',
             }}
-        >
+        >   
 
-            <Text
-                key={mensagem.id}
-                tag="li"
-                styleSheet={{
-                    borderRadius: '5px',
-                    padding: '6px',
-                    marginBottom: '12px',
-                    hover: {
-                        backgroundColor: appConfig.theme.colors.neutrals[700],
-                    }
-                }}
-            >
-                <Box
-                    styleSheet={{
-                        marginBottom: '8px',
-                    }}
-                >
-                    <Image
-                        styleSheet={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            display: 'inline-block',
-                            marginRight: '8px',
-                        }}
-                        src={`https://github.com/vanessametonini.png`}
-                    />
-                    <Text tag="strong">
-                        {mensagem.de}
-                    </Text>
+            {props.mensagens.map((mensagem) => {
+                return (
+                    
                     <Text
+                        key={mensagem.id}
+                        tag="li"
                         styleSheet={{
-                            fontSize: '10px',
-                            marginLeft: '8px',
-                            color: appConfig.theme.colors.neutrals[300],
+                            borderRadius: '1px',
+                            padding: '6px',
+                            marginBottom: '12px',
+                            hover: {
+                                
+                            },
+                            backgroundColor: appConfig.theme.colors.neutrals[100],
+                            color: appConfig.theme.colors.neutrals[700],
                         }}
-                        tag="span"
                     >
-                        {(new Date().toLocaleDateString())}
+                        <Box
+                            styleSheet={{
+                                marginBottom: '8px',
+                            }}
+                        >
+                            <Image
+                                styleSheet={{
+                                    width: '20px',
+                                    height: '20px',
+                                    borderRadius: '50%',
+                                    display: 'inline-block',
+                                    marginRight: '8px',
+                                }}
+                                src={`https://github.com/vanessametonini.png`}
+                            />
+                            <Text tag="strong" styleSheet={{color: appConfig.theme.colors.neutrals[700],}}>
+                                {mensagem.de}
+                            </Text>
+                            <Text
+                                styleSheet={{
+                                    fontSize: '10px',
+                                    marginLeft: '8px',
+                                    color: appConfig.theme.colors.neutrals[700],
+                                }}
+                                tag="span"
+                            >
+                                {(new Date().toLocaleDateString())}
+                            </Text>
+                        </Box>
+                        {mensagem.texto}
                     </Text>
-                </Box>
-                {mensagem.texto}
-            </Text>
+                    
+                );
+
+            })}
+
         </Box>
     )
 }
