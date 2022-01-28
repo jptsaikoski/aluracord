@@ -2,22 +2,48 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import { Window } from './_app.js';
+import { createClient } from '@supabase/supabase-js';
+
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMyNDMzNCwiZXhwIjoxOTU4OTAwMzM0fQ.8IZZRsM8OxQaB6h3a8MHNsz2Gl-CbTgbFiOqlEZ-LhQ';
+const SUPABASE_URL = 'https://hvcyaxgayljwzrrrxbfv.supabase.co';
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
 
 export default function ChatPage() {
     
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
 
+
+    React.useEffect(() => {
+        supabaseClient
+            .from('mensagens')
+            .select('*')
+            .order('id', {ascending: false})
+            .then(({data}) => {
+                console.log(data);
+                setListaDeMensagens(data);
+        });
+    },[]);
+
     function handleNovaMensagem(novaMensagem) {
         const mensagemData = {
-            id: listaDeMensagens.length + 1,
-            de: 'vanessametonini',
+            de: 'jptsaikoski',
             texto: novaMensagem,
         };
-        setListaDeMensagens([
-            mensagemData,
-            ...listaDeMensagens,
-        ]);
+
+        supabaseClient
+            .from('mensagens')
+            .insert([mensagemData])
+            .then(({data}) => {
+                console.log(data);
+                setListaDeMensagens([
+                    data[0],
+                    ...listaDeMensagens,
+                ]);
+        });
+        
         setMensagem('');
     }
 
@@ -200,6 +226,7 @@ function MessageList(props) {
             {props.mensagens.map((mensagem) => {
                 return (
                 <Box 
+                key={mensagem.id}
                 tag="li" styleSheet={{
                     display: 'flex',
                     flexDirection: 'row',
@@ -216,7 +243,6 @@ function MessageList(props) {
                     
                 }}>
                     <Box
-                        key={mensagem.id}
                         styleSheet={{
                             borderRadius: '1px',
                             marginBottom: '12px',
@@ -244,7 +270,7 @@ function MessageList(props) {
                                     display: 'inline-block',
                                     marginRight: '8px',
                                 }}
-                                src={`https://github.com/vanessametonini.png`}/>
+                                src={`https://github.com/${mensagem.de}.png`}/>
                             <Text tag="strong" styleSheet={{color: appConfig.theme.colors.neutrals[700],}}>
                                 {mensagem.de}
                             </Text>
