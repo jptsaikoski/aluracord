@@ -22,7 +22,6 @@ export default function ChatPage() {
             .select('*')
             .order('id', {ascending: false})
             .then(({data}) => {
-                console.log(data);
                 setListaDeMensagens(data);
         });
     },[]);
@@ -37,7 +36,6 @@ export default function ChatPage() {
             .from('mensagens')
             .insert([mensagemData])
             .then(({data}) => {
-                console.log(data);
                 setListaDeMensagens([
                     data[0],
                     ...listaDeMensagens,
@@ -46,6 +44,21 @@ export default function ChatPage() {
         
         setMensagem('');
     }
+
+    function deleteMensagem(identificador) {
+        supabaseClient
+            .from('mensagens')
+            .delete()
+            .match({id: identificador})
+            .then(({data}) => {
+                const arrayFinal = listaDeMensagens.filter(function(x) {
+                    return x.id != identificador;
+                });
+                setListaDeMensagens(arrayFinal);
+            })
+    }
+
+    
 
     return (
         <Box
@@ -94,7 +107,9 @@ export default function ChatPage() {
                         padding: '16px',
                     }}>
                     
-                    <MessageList mensagens={listaDeMensagens} />
+                    <MessageList 
+                        mensagens={listaDeMensagens}
+                        delete={deleteMensagem} />
 
                     <Box
                         as="form"
@@ -201,6 +216,7 @@ function Header() {
 }
 
 function MessageList(props) {
+
     return (
         <Box styleSheet={{
             overflow: 'hidden',
@@ -224,6 +240,7 @@ function MessageList(props) {
         >   
 
             {props.mensagens.map((mensagem) => {
+                const date = mensagem.created_at.substring(0,10);
                 return (
                 <Box 
                 key={mensagem.id}
@@ -276,28 +293,36 @@ function MessageList(props) {
                             </Text>
                             <Text
                                 styleSheet={{
-                                    fontSize: '10px',
+                                    fontSize: '12px',
                                     marginLeft: '8px',
-                                    color: appConfig.theme.colors.neutrals[700],
+                                    color: appConfig.theme.colors.neutrals[400],
                                 }}
                                 tag="span">
-                                {(new Date().toLocaleDateString())}
+                                {date}
                             </Text>
                         </Box>
                         {mensagem.texto}
                     </Box>
                     <Box 
-                    
+                    onClick={() => {
+                        props.delete(mensagem.id);
+                    }}
                     
                     styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'center',
-                        width: '20px', height: '20px', minWidth: '20px',
+                        width: '20px', height: '20px', minWidth: '20px', position: 'relative',
                         backgroundColor: appConfig.theme.colors.neutrals['100'], 
                         borderRadius: '1px', border: '1px solid', marginLeft: '0px',
                         borderColor: appConfig.theme.colors.neutrals['400'], cursor: 'pointer',
                         boxShadow: 'inset 1px 1px 2px 0px rgba(0,0,0,0.3), inset -1px -1px 2px 0px rgba(255,255,255,0.5)',}}>
 
                         <Box styleSheet={{
+                            position: 'absolute',
                           minWidth: '26px', height: '1px', transform: 'rotate(45deg)',
+                          backgroundColor: appConfig.theme.colors.neutrals['400'],
+                          marginTop: '0px', marginBottom: '0px',}}></Box>
+                        <Box styleSheet={{
+                            position: 'absolute',
+                          minWidth: '26px', height: '1px', transform: 'rotate(-45deg)',
                           backgroundColor: appConfig.theme.colors.neutrals['400'],
                           marginTop: '0px', marginBottom: '0px',}}></Box>
 
