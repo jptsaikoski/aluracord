@@ -49,6 +49,7 @@ export default function App({ Component, pageProps}) {
 
 export function Window(props) {
     const windowTitle = props.windowTitle || 'Num deu';
+    const display = props.display || 'flex';
     return (
       <>
       {/* Janela da aplicação - INICIO */}
@@ -57,7 +58,8 @@ export function Window(props) {
             {/* Topo da janela - INICIO */}
             <Box
               styleSheet={{
-                width: '100%', height: '28px', display: 'flex',
+                display: display,
+                width: '100%', height: '28px',
                 flexDirection: 'row', justifyContent: 'space-between',
                 alignItems: 'center', marginBottom: '2px', 
                 paddingRight: '8px', paddingLeft: '8px'

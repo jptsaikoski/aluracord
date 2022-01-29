@@ -3,13 +3,26 @@ import React from 'react';
 import appConfig from '../config.json';
 import { Window } from './_app.js';
 import { createClient } from '@supabase/supabase-js';
+import { useRouter } from 'next/router';
+import { SendSticker } from '../src/components/SendSticker';
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMyNDMzNCwiZXhwIjoxOTU4OTAwMzM0fQ.8IZZRsM8OxQaB6h3a8MHNsz2Gl-CbTgbFiOqlEZ-LhQ';
 const SUPABASE_URL = 'https://hvcyaxgayljwzrrrxbfv.supabase.co';
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+function realtimeMessageUpdate(adicionaMensagem) {
+    return supabaseClient
+        .from('mensagens')
+        .on('INSERT',(respostaLive) => {
+            adicionaMensagem(respostaLive.new);
+        })
+        .subscribe();
+
+}
+
 export default function ChatPage() {
-    
+    const roteamento = useRouter();
+    const usuarioLogado = roteamento.query.username;
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
 
@@ -22,11 +35,22 @@ export default function ChatPage() {
             .then(({data}) => {
                 setListaDeMensagens(data);
         });
+
+        realtimeMessageUpdate((novaMensagem) => {
+
+            setListaDeMensagens((valorAtualDaLista) => {
+                return [
+                    novaMensagem,
+                    ...valorAtualDaLista,
+                ]
+            });
+
+        });
     },[]);
 
     function handleNovaMensagem(novaMensagem) {
         const mensagemData = {
-            de: 'jptsaikoski',
+            de: usuarioLogado,
             texto: novaMensagem,
         };
 
@@ -34,10 +58,6 @@ export default function ChatPage() {
             .from('mensagens')
             .insert([mensagemData])
             .then(({data}) => {
-                setListaDeMensagens([
-                    data[0],
-                    ...listaDeMensagens,
-                ]);
         });
         
         setMensagem('');
@@ -63,12 +83,12 @@ export default function ChatPage() {
           styleSheet={{
             display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end',
             backgroundColor: appConfig.theme.colors.primary[500],
-            backgroundImage: 'url(/static/images/background-1280.gif)',
+            backgroundImage: 'url(/static/images/background-1280.gif)', minHeight: '100%',
             backgroundRepeat: 'no-repeat', backgroundSize: 'cover', maxHeight: '100vh',
             padding: {
                 xs: '24px',
                 md: '48px',
-            }
+            },
           }}>
 
         <Box 
@@ -148,6 +168,8 @@ export default function ChatPage() {
                                 backgroundColor: appConfig.theme.colors.neutrals[100],
                                 marginBottom: '-8px'
                             }}/>
+
+                            <SendSticker onStickerClick={handleNovaMensagem}/>
                             <Button
                                 colorVariant='neutral'
                                 label='Enviar'
@@ -229,14 +251,13 @@ function MessageList(props) {
         <Box
             tag="ul"
             styleSheet={{
-                overflow: 'scroll',
+                overflowY: 'scroll',
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 flex: 1,
                 color: appConfig.theme.colors.neutrals["000"],
                 width: '100%',
-                minWidth: 'calc(100% + 17px)',
-                height: 'calc(100% + 17px)',
+                height: '100%',
             }}
         >   
 
@@ -302,7 +323,20 @@ function MessageList(props) {
                                 {date}
                             </Text>
                         </Box>
-                        {mensagem.texto}
+                        {mensagem.texto.startsWith(':sticker:')
+                        ? (
+                            <Image src={mensagem.texto.replace(':sticker:', '')}
+                                styleSheet={{
+                                    maxWidth: {
+                                        xs: '100%',
+                                        sm: '50%',
+                                        md: '300px',
+                                        lg: '200px',
+                                    },
+                                }}/>
+                        )
+                        : (mensagem.texto)
+                        }
                     </Box>
                     <Box 
                     onClick={() => {
