@@ -36,8 +36,9 @@ import { Window } from './_app.js';
 
 export default function PaginaInicial() {
     const [username, setUsername] = React.useState('jptsaikoski');
-    const [usernameAfter, setUsernameAfter] = React.useState('jptsaikoski');
-    //const [userData, setUserData] = React.useState({name: '', followers: 0, avatar_url: '', location: ''});
+    const [usernameValid, setUsernameValid] = React.useState('jptsaikoski');
+    const [test, setTest] = React.useState([]);
+    const [userData, setUserData] = React.useState({name: '', followers: 0, location: ''});
     
     /*React.useEffect(function () {
 
@@ -52,19 +53,49 @@ export default function PaginaInicial() {
 
     },[])*/
 
+    /*fetch(`https://api.github.com/users/${usernameValid}`)
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            setUserData(data);
+            console.log('O user é: ', userData);
+          });*/
+
+    function getUserData() {
+      console.log(test);
+
+      test.forEach(function (timer) {
+        clearTimeout(timer);
+      })
+
+      setTest([
+        setTimeout(function () {
+          
+          /*fetch(`https://api.github.com/users/${usernameValid}`)
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            setUserData(data);
+            console.log('O user é: ', userData);
+          });*/
+          
+        }, 3000), ...test,
+      ]);
+      
+
+
+    }
+
     function changeName(param) {
       if (param.length > 2) {
-        setUsernameAfter(param);
-        console.log(usernameAfter);
+        setUsernameValid(param);
       } else {
-        setUsernameAfter('');
+        setUsernameValid('');
       }
     }
-    console.log('username: ' + username);
-    console.log('usernameAfter: ' + usernameAfter);
     const roteamento = useRouter();
-
-    //console.log(userData.avatar_url);
     
 
     return (
@@ -124,10 +155,11 @@ export default function PaginaInicial() {
                   rounded='none'
                   value={username}
                   onChange={function (event) {
-                    console.log('username no onChange: ' + username);
                     const valor = event.target.value;
                     setUsername(valor);
                     changeName(valor);
+                    getUserData();
+
                   }}
                   styleSheet={{
                     borderRadius: '2px',
@@ -189,7 +221,7 @@ export default function PaginaInicial() {
                     border: '1px solid',
                     borderColor: appConfig.theme.colors.neutrals['400']
                   }}
-                  src={`https://github.com/${usernameAfter}.png`}/>
+                  src={`https://github.com/${usernameValid}.png`}/>
                 <Text
                   variant="body4"
                   styleSheet={{
@@ -200,7 +232,8 @@ export default function PaginaInicial() {
                     fontWeight: '500',
                     fontSize: '14px'
                   }}>
-                  {usernameAfter}
+                  {usernameValid}
+                  {userData.location}
                 </Text>
               </Box>
               {/* Photo Area */}

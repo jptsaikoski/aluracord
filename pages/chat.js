@@ -8,8 +8,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5v
 const SUPABASE_URL = 'https://hvcyaxgayljwzrrrxbfv.supabase.co';
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-
-
 export default function ChatPage() {
     
     const [mensagem, setMensagem] = React.useState('');
@@ -154,6 +152,9 @@ export default function ChatPage() {
                                 colorVariant='neutral'
                                 label='Enviar'
                                 rounded='none'
+                                onClick={() => {
+                                    handleNovaMensagem(mensagem);
+                                }}
                                 styleSheet={{
                                     backgroundColor: appConfig.theme.colors.neutrals['100'],
                                     borderRadius: '2px',
