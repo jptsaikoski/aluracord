@@ -62,7 +62,7 @@ export default function PaginaInicial() {
             console.log('O user é: ', userData);
           });*/
 
-    function getUserData() {
+    function getUserData(valor) {
       console.log(test);
 
       test.forEach(function (timer) {
@@ -71,17 +71,16 @@ export default function PaginaInicial() {
 
       setTest([
         setTimeout(function () {
-          
-          /*fetch(`https://api.github.com/users/${usernameValid}`)
+          fetch(`https://api.github.com/users/${valor}`)
           .then((response) => {
             return response.json();
           })
           .then((data) => {
             setUserData(data);
-            console.log('O user é: ', userData);
-          });*/
+            console.log('O user é: ', data);
+          });
           
-        }, 3000), ...test,
+        }, 2000), ...test,
       ]);
       
 
@@ -158,7 +157,7 @@ export default function PaginaInicial() {
                     const valor = event.target.value;
                     setUsername(valor);
                     changeName(valor);
-                    getUserData();
+                    getUserData(valor);
 
                   }}
                   styleSheet={{
@@ -230,11 +229,13 @@ export default function PaginaInicial() {
                     padding: '3px 10px',
                     borderRadius: '1000px',
                     fontWeight: '500',
-                    fontSize: '14px'
+                    fontSize: '16px'
                   }}>
-                  {usernameValid}
-                  {userData.location}
+                  {userData.name || usernameValid}
+                  
                 </Text>
+                <Text styleSheet={{marginBottom: '3px', fontSize: '14px'}}>Seguidores: {userData.followers}</Text>
+                <Text styleSheet={{marginBottom: '3px', fontSize: '14px'}}>{userData.location}</Text>
               </Box>
               {/* Photo Area */}
 
