@@ -80,7 +80,7 @@ export default function PaginaInicial() {
             console.log('O user é: ', data);
           });
           
-        }, 2000), ...test,
+        }, 1500), ...test,
       ]);
       
 

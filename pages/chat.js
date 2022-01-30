@@ -23,8 +23,10 @@ function realtimeMessageUpdate(adicionaMensagem) {
 export default function ChatPage() {
     const roteamento = useRouter();
     const usuarioLogado = roteamento.query.username;
+    const [isLoaded, setIsLoaded] = React.useState('');
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
+    console.log('antes do banco',isLoaded);
 
 
     React.useEffect(() => {
@@ -34,6 +36,7 @@ export default function ChatPage() {
             .order('id', {ascending: false})
             .then(({data}) => {
                 setListaDeMensagens(data);
+                setIsLoaded(!isLoaded);
         });
 
         realtimeMessageUpdate((novaMensagem) => {
@@ -44,6 +47,7 @@ export default function ChatPage() {
                     ...valorAtualDaLista,
                 ]
             });
+        
 
         });
     },[]);
@@ -113,6 +117,20 @@ export default function ChatPage() {
                     padding: '32px',
                 }}>
                     <Header/>
+                {!isLoaded 
+                ? ( 
+                    <Box styleSheet={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        height: '100%',
+                    }}>
+                        <Text styleSheet={{fontSize: '24px'}}>Carregando ainda</Text>
+                    </Box>
+                ) 
+                : (
                 <Box
                     styleSheet={{
                         overflow: 'hidden',
@@ -199,6 +217,7 @@ export default function ChatPage() {
                             />
                     </Box>
                 </Box>
+                )}
             </Box>
             </Window>
         </Box>

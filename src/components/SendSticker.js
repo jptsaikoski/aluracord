@@ -103,7 +103,7 @@ export function SendSticker(props) {
               flexWrap: 'wrap',
               justifyContent: 'space-between',
               flex: 1,
-              overflow: 'scroll',
+              overflowY: 'scroll',
             }}
           >
             {appConfig.stickers.map((sticker) => (
