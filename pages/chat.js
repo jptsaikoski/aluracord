@@ -61,11 +61,13 @@ export default function ChatPage() {
             texto: novaMensagem,
         };
 
-        supabaseClient
-            .from('mensagens')
-            .insert([mensagemData])
-            .then(({data}) => {
-        });
+        if (mensagemData.texto != '') {
+            supabaseClient
+                .from('mensagens')
+                .insert([mensagemData])
+                .then(({data}) => {
+            });
+        }
         
         setMensagem('');
         changeBackground();
@@ -206,6 +208,7 @@ export default function ChatPage() {
                             alignItems: 'center',
                         }}>
                         <TextField
+                            type='text'
                             value={mensagem}
                             onChange={(event) => {
                                 const valorMensagem = event.target.value;
