@@ -24,7 +24,7 @@ function realtimeMessageUpdate(adicionaMensagem) {
 export default function ChatPage() {
     const roteamento = useRouter();
     const usuarioLogado = roteamento.query.username;
-    const [isLoaded, setIsLoaded] = React.useState('');
+    const [isLoaded, setIsLoaded] = React.useState(true);
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
 
@@ -36,7 +36,7 @@ export default function ChatPage() {
             .order('id', {ascending: false})
             .then(({data}) => {
                 setListaDeMensagens(data);
-                setIsLoaded(!isLoaded);
+                //setIsLoaded(!isLoaded);
         });
 
         realtimeMessageUpdate((novaMensagem) => {
@@ -67,17 +67,22 @@ export default function ChatPage() {
         setMensagem('');
     }
 
-    function deleteMensagem(identificador) {
+    function deleteMensagem(identificador, pessoa) {
+        if (usuarioLogado == pessoa) {
         supabaseClient
             .from('mensagens')
             .delete()
             .match({id: identificador})
             .then(({data}) => {
-                const arrayFinal = listaDeMensagens.filter(function(x) {
-                    return x.id != identificador;
-                });
-                setListaDeMensagens(arrayFinal);
+                
+                    const arrayFinal = listaDeMensagens.filter(function(x) {
+                        return x.id != identificador;
+                    });
+                    setListaDeMensagens(arrayFinal);
             })
+        } else {
+            alert('Você não pode apagar mensagens de outro usuário >:(');
+        }
     }
 
     
@@ -376,9 +381,9 @@ function MessageList(props) {
                         : (mensagem.texto)
                         }
                     </Box>
-                    {/*<Box 
+                    <Box 
                     onClick={() => {
-                        props.delete(mensagem.id);
+                        props.delete(mensagem.id, mensagem.de);
                     }}
                     
                     styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'center',
@@ -399,7 +404,7 @@ function MessageList(props) {
                           backgroundColor: appConfig.theme.colors.neutrals['400'],
                           marginTop: '0px', marginBottom: '0px',}}></Box>
 
-                        </Box>*/}
+                        </Box>
                 </Box>    
                 );
 
