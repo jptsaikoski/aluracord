@@ -25,7 +25,7 @@ function realtimeMessageUpdate(adicionaMensagem) {
 export default function ChatPage() {
     const roteamento = useRouter();
     const usuarioLogado = roteamento.query.username;
-    const [isLoaded, setIsLoaded] = React.useState(true);
+    const [isLoaded, setIsLoaded] = React.useState('');
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
     const [gifUrl, setGifUrl] = React.useState('/static/images/frame-1.png');
@@ -38,7 +38,7 @@ export default function ChatPage() {
             .order('id', {ascending: false})
             .then(({data}) => {
                 setListaDeMensagens(data);
-                //setIsLoaded(!isLoaded);
+                setIsLoaded(!isLoaded);
                 changeBackground();
         });
 
