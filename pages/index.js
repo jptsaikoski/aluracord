@@ -35,8 +35,8 @@ import { Window } from '../src/components/Window';
 // export default HomePage
 
 export default function PaginaInicial() {
-    const [username, setUsername] = React.useState('jptsaikoski');
-    const [usernameValid, setUsernameValid] = React.useState('jptsaikoski');
+    const [username, setUsername] = React.useState('');
+    const [usernameValid, setUsernameValid] = React.useState('');
     const [test, setTest] = React.useState([]);
     const [userData, setUserData] = React.useState({name: '', followers: 0, location: ''});
     const [gifUrl, setGifUrl] = React.useState('/static/images/frame-1.png');
@@ -80,7 +80,7 @@ export default function PaginaInicial() {
           });
           changeBackground();
           
-        }, 1500), ...test,
+        }, 1000), ...test,
       ]);
       
 
@@ -173,6 +173,7 @@ export default function PaginaInicial() {
 
                 <TextField
                   fullWidth
+                  placeholder='Insira seu usuário do Github...'
                   rounded='none'
                   value={username}
                   onChange={function (event) {
@@ -242,7 +243,7 @@ export default function PaginaInicial() {
                     border: '1px solid',
                     borderColor: appConfig.theme.colors.neutrals['400']
                   }}
-                  src={`https://github.com/${usernameValid}.png`}/>
+                  src={usernameValid != '' ? `https://github.com/${usernameValid}.png` : '/static/images/mac-os-avatar.png'}/>
                 <Text
                   variant="body4"
                   styleSheet={{
@@ -253,11 +254,11 @@ export default function PaginaInicial() {
                     fontWeight: '500',
                     fontSize: '16px'
                   }}>
-                  {userData.name || usernameValid}
+                  {userData.name || usernameValid || 'Mac OS 7.5'}
                   
                 </Text>
                 <Text styleSheet={{marginBottom: '3px', fontSize: '14px'}}>Seguidores: {userData.followers}</Text>
-                <Text styleSheet={{marginBottom: '3px', fontSize: '14px'}}>{userData.location}</Text>
+                <Text styleSheet={{marginBottom: '3px', fontSize: '14px'}}>{userData.location || 'Silicon Valley, CA'}</Text>
               </Box>
               {/* Photo Area */}
 

@@ -288,21 +288,23 @@ function Header() {
             alignItems: 'center', justifyContent: 'space-between' }} >
                 <Button
                     colorVariant='neutral'
-                    label='Logout'
+                    label='Sair'
                     href="/"
                     rounded='none'
                     styleSheet={{
-                            backgroundColor: appConfig.theme.colors.neutrals['100'],
-                            borderRadius: '2px',
-                            border: '1px solid',
-                            borderTopColor: appConfig.theme.colors.neutrals['400'],
-                            borderLeftColor: appConfig.theme.colors.neutrals['400'],
-                            borderRightColor: appConfig.theme.colors.neutrals['400'],
-                            borderBottomColor: appConfig.theme.colors.neutrals['400'],
-                            boxShadow: 'inset 2px 3px 1px 0px rgba(255,255,255,1), inset -2px -3px 1px 0px rgba(0,0,0,0.16)',
+                        backgroundColor: appConfig.theme.colors.neutrals['100'],
+                        borderRadius: '2px',
+                        border: '1px solid',
+                        borderTopColor: appConfig.theme.colors.neutrals['400'],
+                        borderLeftColor: appConfig.theme.colors.neutrals['400'],
+                        borderRightColor: appConfig.theme.colors.neutrals['400'],
+                        borderBottomColor: appConfig.theme.colors.neutrals['400'],
+                        boxShadow: 'inset 2px 3px 1px 0px rgba(255,255,255,1), inset -2px -3px 1px 0px rgba(0,0,0,0.16)',
+                        paddingTop: '6px',
+                        paddingBottom: '6px',
                     }}
                     buttonColors={{
-                        contrastColor: appConfig.theme.colors.neutrals['900'],
+                        contrastColor: appConfig.theme.colors.neutrals["900"],
                         mainColor: appConfig.theme.colors.neutrals['100'],
                         mainColorLight: appConfig.theme.colors.neutrals['100'],
                         mainColorStrong: appConfig.theme.colors.neutrals['200'],
