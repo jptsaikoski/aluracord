@@ -199,7 +199,8 @@ export default function ChatPage() {
                     
                     <MessageList 
                         mensagens={listaDeMensagens}
-                        delete={deleteMensagem} />
+                        delete={deleteMensagem}
+                        userLogado={usuarioLogado} />
 
                     <Box
                         as="form"
@@ -315,8 +316,6 @@ function Header() {
 function MessageList(props) {
     const [userInfoState, setUserInfoState] = React.useState(false);
 
-    
-
     return (
         <Box styleSheet={{
             overflow: 'hidden',
@@ -379,7 +378,9 @@ function MessageList(props) {
                                 display: 'flex',
                                 alignItems: 'center'
                             }}>
-                                <UserInfo isUserInfoOpen={userInfoState} whatUserIs={mensagem.de}/>
+                                
+                            <UserInfo isUserInfoOpen={userInfoState} whatUserIs={mensagem.de}/>
+                                
                             
                             <Text tag="strong" styleSheet={{color: appConfig.theme.colors.neutrals[700],}}>
                                 {mensagem.de}
@@ -410,7 +411,9 @@ function MessageList(props) {
                         : (mensagem.texto)
                         }
                     </Box>
+                    {props.userLogado == mensagem.de && (
                     <DeleteMessage deleteSignal={deleteMessageSignal}/>
+                    )}
                 </Box>    
                 );
 
