@@ -1,5 +1,7 @@
 import { Box, Text } from '@skynexui/components';
 import appConfig from '../config.json';
+import Head from 'next/head';
+
 
 function GlobalStyle() {
     return (
@@ -64,6 +66,11 @@ export default function App({ Component, pageProps}) {
     return (
         <>
             <GlobalStyle/>
+            <Head>
+              <title>Aluracord - Matrix</title>
+              <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+              <link rel="shortcut icon" href="/static/images/favicon.ico" />
+            </Head>
             <Component {...pageProps}/>
         
         </>

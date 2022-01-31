@@ -39,6 +39,7 @@ export default function PaginaInicial() {
     const [usernameValid, setUsernameValid] = React.useState('jptsaikoski');
     const [test, setTest] = React.useState([]);
     const [userData, setUserData] = React.useState({name: '', followers: 0, location: ''});
+    const [gifUrl, setGifUrl] = React.useState('/static/images/frame-1.png');
     
     /*React.useEffect(function () {
 
@@ -77,6 +78,7 @@ export default function PaginaInicial() {
           .then((data) => {
             setUserData(data);
           });
+          changeBackground();
           
         }, 1500), ...test,
       ]);
@@ -92,7 +94,29 @@ export default function PaginaInicial() {
         setUsernameValid('');
       }
     }
+
+    function changeBackground() { 
+
+      const randomNumber = Math.floor(Math.random() * 3);
+
+      if (gifUrl.endsWith(".gif")) {
+        setGifUrl(`/static/images/frame-${randomNumber}.png`);
+      } else {
+        setGifUrl('/static/images/background-1280-30.gif');
+
+        const gifTimer = setTimeout(function() {
+            setGifUrl(`/static/images/frame-${randomNumber}.png`);
+        }, 2000)
+      }    
+    }
+    
+    React.useEffect(() => {
+      changeBackground();
+    },[])
+
     const roteamento = useRouter();
+
+    
     
 
     return (
@@ -100,8 +124,8 @@ export default function PaginaInicial() {
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end',
-            backgroundColor: appConfig.theme.colors.primary[500],
-            backgroundImage: 'url(/static/images/background-1280.gif)',
+            backgroundColor: '#091B15',
+            backgroundImage: `url(${gifUrl})`, minHeight: '100%',
             backgroundRepeat: 'no-repeat', backgroundSize: 'cover',
             padding: {
               xs: '24px',

@@ -2,6 +2,7 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import { Window } from '../src/components/Window';
+import { DeleteMessage } from '../src/components/DeleteMessage';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/router';
 import { SendSticker } from '../src/components/SendSticker';
@@ -27,6 +28,7 @@ export default function ChatPage() {
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
+    const [gifUrl, setGifUrl] = React.useState('/static/images/frame-1.png');
 
 
     React.useEffect(() => {
@@ -37,6 +39,7 @@ export default function ChatPage() {
             .then(({data}) => {
                 setListaDeMensagens(data);
                 //setIsLoaded(!isLoaded);
+                changeBackground();
         });
 
         realtimeMessageUpdate((novaMensagem) => {
@@ -65,11 +68,12 @@ export default function ChatPage() {
         });
         
         setMensagem('');
+        changeBackground();
     }
 
     function deleteMensagem(identificador, pessoa) {
         if (usuarioLogado == pessoa) {
-        supabaseClient
+            supabaseClient
             .from('mensagens')
             .delete()
             .match({id: identificador})
@@ -83,7 +87,23 @@ export default function ChatPage() {
         } else {
             alert('Você não pode apagar mensagens de outro usuário >:(');
         }
+        changeBackground();
     }
+
+    function changeBackground() { 
+
+        const randomNumber = Math.floor(Math.random() * 3);
+
+        if (gifUrl.endsWith(".gif")) {
+            setGifUrl(`/static/images/frame-${randomNumber}.png`);
+        } else {
+            setGifUrl('/static/images/background-1280-30.gif');
+
+            const gifTimer = setTimeout(function() {
+                setGifUrl(`/static/images/frame-${randomNumber}.png`);
+            }, 2000)
+        }    
+       }
 
     
 
@@ -91,9 +111,10 @@ export default function ChatPage() {
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end',
-            backgroundColor: appConfig.theme.colors.primary[500],
-            backgroundImage: 'url(/static/images/background-1280.gif)', minHeight: '100%',
+            backgroundColor: '#091B15',
+            backgroundImage: `url(${gifUrl})`, minHeight: '100%',
             backgroundRepeat: 'no-repeat', backgroundSize: 'cover', maxHeight: '100vh',
+            transition: 'all 0.05s',
             padding: {
                 xs: '24px',
                 md: '48px',
@@ -291,6 +312,8 @@ function Header() {
 function MessageList(props) {
     const [userInfoState, setUserInfoState] = React.useState(false);
 
+    
+
     return (
         <Box styleSheet={{
             overflow: 'hidden',
@@ -314,6 +337,9 @@ function MessageList(props) {
 
             {props.mensagens.map((mensagem) => {
                 const date = mensagem.created_at.substring(0,10);
+                function deleteMessageSignal() {
+                    props.delete(mensagem.id, mensagem.de);
+                }
                 return (
                 <Box 
                 key={mensagem.id}
@@ -381,30 +407,7 @@ function MessageList(props) {
                         : (mensagem.texto)
                         }
                     </Box>
-                    <Box 
-                    onClick={() => {
-                        props.delete(mensagem.id, mensagem.de);
-                    }}
-                    
-                    styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'center',
-                        width: '20px', height: '20px', minWidth: '20px', position: 'relative',
-                        backgroundColor: appConfig.theme.colors.neutrals['100'], 
-                        borderRadius: '1px', border: '1px solid', marginLeft: '0px',
-                        borderColor: appConfig.theme.colors.neutrals['400'], cursor: 'pointer',
-                        }}>
-
-                        <Box styleSheet={{
-                            position: 'absolute',
-                          minWidth: '26px', height: '1px', transform: 'rotate(45deg)',
-                          backgroundColor: appConfig.theme.colors.neutrals['400'],
-                          marginTop: '0px', marginBottom: '0px',}}></Box>
-                        <Box styleSheet={{
-                            position: 'absolute',
-                          minWidth: '26px', height: '1px', transform: 'rotate(-45deg)',
-                          backgroundColor: appConfig.theme.colors.neutrals['400'],
-                          marginTop: '0px', marginBottom: '0px',}}></Box>
-
-                        </Box>
+                    <DeleteMessage deleteSignal={deleteMessageSignal}/>
                 </Box>    
                 );
 

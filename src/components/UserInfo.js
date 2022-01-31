@@ -149,6 +149,33 @@ export function UserInfo(props) {
                       color: appConfig.theme.colors.neutrals["400"],
                       fontWeight: 'normal',
                     }}>
+                      Nome: 
+                    </Text>
+
+                    <Text
+                    styleSheet={{
+                      color: appConfig.theme.colors.neutrals["700"],
+                      fontWeight: 'normal',
+                    }}>
+                      {userData.name}
+                    </Text>
+
+                  </Box>
+
+                  <Box
+                  tag='li'
+                  styleSheet={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginBottom: '6px'
+                  }}>
+
+                    <Text
+                    styleSheet={{
+                      color: appConfig.theme.colors.neutrals["400"],
+                      fontWeight: 'normal',
+                    }}>
                       Username: 
                     </Text>
 

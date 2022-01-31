@@ -4,6 +4,7 @@ import appConfig from '../../config.json';
 export function Window(props) {
     const windowTitle = props.windowTitle || 'Num deu';
     const display = props.display || 'flex';
+
     return (
       <>
       {/* Janela da aplicação - INICIO */}
@@ -25,7 +26,14 @@ export function Window(props) {
                 backgroundColor: appConfig.theme.colors.neutrals['300'], 
                 borderRadius: '1px', border: '1px solid', marginRight: '8px',
                 borderColor: appConfig.theme.colors.neutrals['400'],
-                boxShadow: 'inset 1px 1px 2px 0px rgba(255,255,255,0.5), inset -1px -1px 2px 0px rgba(0,0,0,0.16)',}}></Box>
+                boxShadow: 'inset 1px 1px 2px 0px rgba(255,255,255,0.5), inset -1px -1px 2px 0px rgba(0,0,0,0.16)',
+                cursor: 'pointer'}}
+                onClick={() => {
+                  if (props.closeButton != undefined && props.closeButton != null && props.closeButton != '') {
+                    props.closeButton();
+                  }
+                }}
+                ></Box>
 
               {/* Meio do topo - INICIO */}
               <Box styleSheet={{
