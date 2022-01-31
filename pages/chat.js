@@ -27,7 +27,6 @@ export default function ChatPage() {
     const [isLoaded, setIsLoaded] = React.useState('');
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
-    console.log('antes do banco',isLoaded);
 
 
     React.useEffect(() => {
@@ -371,12 +370,13 @@ function MessageList(props) {
                                         md: '300px',
                                         lg: '200px',
                                     },
+                                    maxHeight: '200px',
                                 }}/>
                         )
                         : (mensagem.texto)
                         }
                     </Box>
-                    <Box 
+                    {/*<Box 
                     onClick={() => {
                         props.delete(mensagem.id);
                     }}
@@ -399,7 +399,7 @@ function MessageList(props) {
                           backgroundColor: appConfig.theme.colors.neutrals['400'],
                           marginTop: '0px', marginBottom: '0px',}}></Box>
 
-                    </Box>
+                        </Box>*/}
                 </Box>    
                 );
 

@@ -8,7 +8,6 @@ export function UserInfo(props) {
   const [userData, setUserData] = React.useState({name: '', followers: 0, location: ''});
   const isUserInfoOpen = props.isUserInfoOpen || false;
   const whatUserIs = props.whatUserIs;
-  console.log('isOpen', isOpen);
 
   function getUserData(x) {
     fetch(`https://api.github.com/users/${x}`)
