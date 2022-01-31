@@ -1,10 +1,11 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
-import { Window } from './_app.js';
+import { Window } from '../src/components/Window';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/router';
 import { SendSticker } from '../src/components/SendSticker';
+import { UserInfo } from '../src/components/UserInfo';
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMyNDMzNCwiZXhwIjoxOTU4OTAwMzM0fQ.8IZZRsM8OxQaB6h3a8MHNsz2Gl-CbTgbFiOqlEZ-LhQ';
 const SUPABASE_URL = 'https://hvcyaxgayljwzrrrxbfv.supabase.co';
@@ -114,7 +115,7 @@ export default function ChatPage() {
                     height: '100%',
                     maxHeight: '100%',
                     width: '100%',
-                    padding: '32px',
+                    padding: '16px',
                 }}>
                     <Header/>
                 {!isLoaded 
@@ -127,7 +128,33 @@ export default function ChatPage() {
                         width: '100%',
                         height: '100%',
                     }}>
-                        <Text styleSheet={{fontSize: '24px'}}>Carregando ainda</Text>
+                        <Text styleSheet={{fontSize: '24px', marginBottom: '24px'}}>Recuperando dados...</Text>
+                        <div className='loading-bar'>
+                            <div className='loading-bar-content'></div>
+                        </div>
+
+                        <style jsx>{`
+                            @keyframes load {
+                                0% {width: 0px}
+                                30% {width: 30%}
+                                50% {width: 40%}
+                                70% {width: 80%}
+                                100% {width: 95%}
+                              }
+                            .loading-bar {
+                                width: 200px;
+                                height: 24px;
+                                border: 1px solid ${appConfig.theme.colors.neutrals[700]};
+                            }
+                            .loading-bar-content {
+                                width: 0px;
+                                height: 24px;
+                                float: left;
+                                background-color: ${appConfig.theme.colors.neutrals[400]};
+                                animation: load 4s;
+                            }
+
+                        `}</style>
                     </Box>
                 ) 
                 : (
@@ -258,6 +285,7 @@ function Header() {
 }
 
 function MessageList(props) {
+    const [userInfoState, setUserInfoState] = React.useState(false);
 
     return (
         <Box styleSheet={{
@@ -318,17 +346,8 @@ function MessageList(props) {
                                 display: 'flex',
                                 alignItems: 'center'
                             }}>
-                            <Image
-                                styleSheet={{
-                                    width: '20px',
-                                    height: '20px',
-                                    borderRadius: '1px',
-                                    border: '1px solid',
-                                    borderColor : appConfig.theme.colors.neutrals[400],
-                                    display: 'inline-block',
-                                    marginRight: '8px',
-                                }}
-                                src={`https://github.com/${mensagem.de}.png`}/>
+                                <UserInfo isUserInfoOpen={userInfoState} whatUserIs={mensagem.de}/>
+                            
                             <Text tag="strong" styleSheet={{color: appConfig.theme.colors.neutrals[700],}}>
                                 {mensagem.de}
                             </Text>
@@ -367,7 +386,7 @@ function MessageList(props) {
                         backgroundColor: appConfig.theme.colors.neutrals['100'], 
                         borderRadius: '1px', border: '1px solid', marginLeft: '0px',
                         borderColor: appConfig.theme.colors.neutrals['400'], cursor: 'pointer',
-                        boxShadow: 'inset 1px 1px 2px 0px rgba(0,0,0,0.3), inset -1px -1px 2px 0px rgba(255,255,255,0.5)',}}>
+                        }}>
 
                         <Box styleSheet={{
                             position: 'absolute',

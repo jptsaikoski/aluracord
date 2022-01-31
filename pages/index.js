@@ -2,7 +2,7 @@ import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
 import { useRouter } from 'next/router';
 import appConfig from '../config.json';
-import { Window } from './_app.js';
+import { Window } from '../src/components/Window';
 
   function Titulo(props) {
     const Tag = props.tag || 'h1';
@@ -63,7 +63,6 @@ export default function PaginaInicial() {
           });*/
 
     function getUserData(valor) {
-      console.log(test);
 
       test.forEach(function (timer) {
         clearTimeout(timer);
@@ -77,7 +76,6 @@ export default function PaginaInicial() {
           })
           .then((data) => {
             setUserData(data);
-            console.log('O user é: ', data);
           });
           
         }, 1500), ...test,
