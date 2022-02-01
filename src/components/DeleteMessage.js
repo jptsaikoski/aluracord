@@ -14,7 +14,7 @@ export function DeleteMessage(props) {
         
         styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'center',
             width: '20px', height: '20px', minWidth: '20px', position: 'relative',
-            backgroundColor: appConfig.theme.colors.neutrals['100'], 
+            backgroundColor: '', 
             borderRadius: '1px', border: '1px solid', marginLeft: '0px',
             borderColor: appConfig.theme.colors.neutrals['400'], cursor: 'pointer',
             }}>

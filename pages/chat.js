@@ -25,7 +25,7 @@ function realtimeMessageUpdate(adicionaMensagem) {
 export default function ChatPage() {
     const roteamento = useRouter();
     const usuarioLogado = roteamento.query.username;
-    const [isLoaded, setIsLoaded] = React.useState('');
+    const [isLoaded, setIsLoaded] = React.useState(true);
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
     const [gifUrl, setGifUrl] = React.useState('/static/images/frame-1.png');
@@ -35,10 +35,11 @@ export default function ChatPage() {
         supabaseClient
             .from('mensagens')
             .select('*')
+            .range(0,19)
             .order('id', {ascending: false})
             .then(({data}) => {
                 setListaDeMensagens(data);
-                setIsLoaded(!isLoaded);
+                //setIsLoaded(!isLoaded);
                 changeBackground();
         });
 
@@ -132,7 +133,11 @@ export default function ChatPage() {
                     md: '800px',
                 },
             }}>
-            <Window windowTitle='Chat Global'>
+            <Window windowTitle='Chat Global' 
+            closeButton={() => {
+                roteamento.push(`/`);
+            }}>
+
             <Box
                 styleSheet={{
                     overflow: 'hidden',
@@ -366,7 +371,7 @@ function MessageList(props) {
                         styleSheet={{
                             borderRadius: '1px',
                             marginBottom: '12px',
-                            backgroundColor: appConfig.theme.colors.neutrals[100],
+                            backgroundColor: '',
                             color: appConfig.theme.colors.neutrals[700],
                             width: '100%',
                             maxWidth: '100%',
@@ -384,7 +389,10 @@ function MessageList(props) {
                             <UserInfo isUserInfoOpen={userInfoState} whatUserIs={mensagem.de}/>
                                 
                             
-                            <Text tag="strong" styleSheet={{color: appConfig.theme.colors.neutrals[700],}}>
+                            <Text tag="strong" 
+                            styleSheet={{
+                                color: props.userLogado == mensagem.de ? appConfig.theme.colors.primary['500'] : appConfig.theme.colors.neutrals[700],
+                                }}>
                                 {mensagem.de}
                             </Text>
                             <Text
