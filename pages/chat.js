@@ -136,7 +136,7 @@ export default function ChatPage() {
                     height: '100%',
                     maxHeight: {
                         xs: 'calc(100% - 72px - 16px)',
-                        lg: ''
+                        lg: '100%'
                     },
                     width: '100%',
                     maxWidth: {
