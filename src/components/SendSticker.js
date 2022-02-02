@@ -109,7 +109,6 @@ export function SendSticker(props) {
               {appConfig.stickers.map((sticker) => (
                 <Text
                   onClick={() => {
-                    // console.log('[DENTRO DO COMPONENTE] Clicou no sticker:', sticker);
                     const stickerCode = ':sticker:' + sticker;
                     if (Boolean(props.onStickerClick)) {
                       props.onStickerClick(stickerCode);

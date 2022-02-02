@@ -8,85 +8,100 @@ import { useRouter } from 'next/router';
 import { SendSticker } from '../src/components/SendSticker';
 import { UserInfo } from '../src/components/UserInfo';
 import { MenuBar } from '../src/components/MenuBar';
+import { supabaseClient } from '../src/components/Supabase';
 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMyNDMzNCwiZXhwIjoxOTU4OTAwMzM0fQ.8IZZRsM8OxQaB6h3a8MHNsz2Gl-CbTgbFiOqlEZ-LhQ';
-const SUPABASE_URL = 'https://hvcyaxgayljwzrrrxbfv.supabase.co';
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-function realtimeMessageUpdate(adicionaMensagem) {
+function realtimeMessageUpdate(addMessage) {
     return supabaseClient
         .from('mensagens')
-        .on('INSERT',(respostaLive) => {
-            adicionaMensagem(respostaLive.new);
+        .on('INSERT',(newMessage) => {
+            addMessage(newMessage.new);
         })
         .subscribe();
 
 }
 
 export default function ChatPage() {
-    const roteamento = useRouter();
-    const usuarioLogado = roteamento.query.username;
+    const routing = useRouter();
+    const loggedUser = routing.query.username;
+    const [counter, setCounter] = React.useState(0);
     const [isLoaded, setIsLoaded] = React.useState(true);
-    const [mensagem, setMensagem] = React.useState('');
-    const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
+    const [message, setMessage] = React.useState('');
+    const [messageTree, setMessageTree] = React.useState([]);
     const [gifUrl, setGifUrl] = React.useState('/static/images/frame-1.png');
 
-
     React.useEffect(() => {
-        supabaseClient
-            .from('mensagens')
-            .select('*')
-            .range(0,19)
-            .order('id', {ascending: false})
-            .then(({data}) => {
-                setListaDeMensagens(data);
-                //setIsLoaded(!isLoaded);
-                changeBackground();
-        });
+        if (counter < 10) {
 
-        realtimeMessageUpdate((novaMensagem) => {
+            if (loggedUser != undefined && loggedUser != null && loggedUser != '' && loggedUser != 'undefined') {
+                supabaseClient
+                .from('mensagens')
+                .select('*')
+                .range(0,19)
+                .order('id', {ascending: false})
+                .then(({data}) => {
+                    if (loggedUser != undefined && loggedUser != null && loggedUser != '' ) {
+                        setMessageTree(data);
+                        //setIsLoaded(!isLoaded);
+                        changeBackground();
+                    } else {
+                        alert('Você precisa estar logado para acessar o chat');
+                        routing.push('/');
+                    }
+                });
+            
+                realtimeMessageUpdate((newMessage) => {
+                
+                    setMessageTree((actualTree) => {
+                        return [
+                            newMessage,
+                            ...actualTree,
+                        ]
+                    });
 
-            setListaDeMensagens((valorAtualDaLista) => {
-                return [
-                    novaMensagem,
-                    ...valorAtualDaLista,
-                ]
-            });
-        
+                });
+            } else {
+                setCounter(counter + 1);
+            }
 
-        });
-    },[]);
+        } else {
 
-    function handleNovaMensagem(novaMensagem) {
-        const mensagemData = {
-            de: usuarioLogado,
-            texto: novaMensagem,
+            alert('Você precisa estar logado para acessar essa página.');
+            routing.push('/');
+
+        }
+
+    },[counter]);
+
+    function handleNewMessage(newMessage) {
+        const messageData = {
+            de: loggedUser,
+            texto: newMessage,
         };
 
-        if (mensagemData.texto != '') {
+        if (messageData.texto != '') {
             supabaseClient
                 .from('mensagens')
-                .insert([mensagemData])
+                .insert([messageData])
                 .then(({data}) => {
             });
         }
         
-        setMensagem('');
+        setMessage('');
         changeBackground();
     }
 
-    function deleteMensagem(identificador, pessoa) {
-        if (usuarioLogado == pessoa) {
+    function deleteMessage(identificador, pessoa) {
+        if (loggedUser == pessoa) {
             supabaseClient
             .from('mensagens')
             .delete()
             .match({id: identificador})
             .then(({data}) => {
                 
-                    const arrayFinal = listaDeMensagens.filter(function(x) {
+                    const arrayFinal = messageTree.filter(function(x) {
                         return x.id != identificador;
                     });
-                    setListaDeMensagens(arrayFinal);
+                    setMessageTree(arrayFinal);
             })
         } else {
             alert('Você não pode apagar mensagens de outro usuário >:(');
@@ -129,7 +144,7 @@ export default function ChatPage() {
             },
           }}>
 
-            <MenuBar loggedUser={usuarioLogado}/>
+            <MenuBar loggedUser={loggedUser}/>
 
             <Box 
                 styleSheet={{
@@ -146,7 +161,7 @@ export default function ChatPage() {
                 }}>
                 <Window windowTitle='Chat Global' 
                 closeButton={() => {
-                    roteamento.push(`/`);
+                    routing.push(`/`);
                 }}>
 
                 <Box
@@ -214,9 +229,9 @@ export default function ChatPage() {
                         }}>
                         
                         <MessageList 
-                            mensagens={listaDeMensagens}
-                            delete={deleteMensagem}
-                            userLogado={usuarioLogado} />
+                            messageList={messageTree}
+                            delete={deleteMessage}
+                            loggedUser={loggedUser} />
 
                         <Box
                             as="form"
@@ -226,20 +241,20 @@ export default function ChatPage() {
                             }}>
                             <TextField
                                 type='text'
-                                value={mensagem}
+                                value={message}
                                 onChange={(event) => {
-                                    const valorMensagem = event.target.value;
-                                    setMensagem(valorMensagem);
+                                    const messageValue = event.target.value;
+                                    setMessage(messageValue);
                                 }}
                                 onKeyPress={(event) => {
                                     if (event.key === "Enter") {
                                         event.preventDefault();
 
-                                        handleNovaMensagem(mensagem);
+                                        handleNewMessage(message);
 
                                     }
                                 }}
-                                placeholder="Insira sua mensagem aqui..."
+                                placeholder="Insira sua message aqui..."
                                 textFieldColors={{
                                     neutral: {
                                         mainColor: appConfig.theme.colors.neutrals[400],
@@ -259,13 +274,13 @@ export default function ChatPage() {
                                     marginBottom: '-8px'
                                 }}/>
 
-                                <SendSticker onStickerClick={handleNovaMensagem}/>
+                                <SendSticker onStickerClick={handleNewMessage}/>
                                 <Button
                                     colorVariant='neutral'
                                     label='Enviar'
                                     rounded='none'
                                     onClick={() => {
-                                        handleNovaMensagem(mensagem);
+                                        handleNewMessage(message);
                                     }}
                                     styleSheet={{
                                         backgroundColor: appConfig.theme.colors.neutrals['100'],
@@ -355,14 +370,14 @@ function MessageList(props) {
             }}
         >   
 
-            {props.mensagens.map((mensagem) => {
-                const date = mensagem.created_at.substring(0,10);
+            {props.messageList.map((message) => {
+                const date = message.created_at.substring(0,10);
                 function deleteMessageSignal() {
-                    props.delete(mensagem.id, mensagem.de);
+                    props.delete(message.id, message.de);
                 }
                 return (
                 <Box 
-                key={mensagem.id}
+                key={message.id}
                 tag="li" styleSheet={{
                     display: 'flex',
                     flexDirection: 'row',
@@ -397,14 +412,14 @@ function MessageList(props) {
                                 alignItems: 'center'
                             }}>
                                 
-                            <UserInfo isUserInfoOpen={userInfoState} whatUserIs={mensagem.de}/>
+                            <UserInfo isUserInfoOpen={userInfoState} whatUserIs={message.de}/>
                                 
                             
                             <Text tag="strong" 
                             styleSheet={{
-                                color: props.userLogado == mensagem.de ? appConfig.theme.colors.primary['500'] : appConfig.theme.colors.neutrals[700],
+                                color: props.loggedUser == message.de ? appConfig.theme.colors.primary['500'] : appConfig.theme.colors.neutrals[700],
                                 }}>
-                                {mensagem.de}
+                                {message.de}
                             </Text>
                             <Text
                                 styleSheet={{
@@ -416,9 +431,9 @@ function MessageList(props) {
                                 {date}
                             </Text>
                         </Box>
-                        {mensagem.texto.startsWith(':sticker:')
+                        {message.texto.startsWith(':sticker:')
                         ? (
-                            <Image src={mensagem.texto.replace(':sticker:', '')}
+                            <Image src={message.texto.replace(':sticker:', '')}
                                 styleSheet={{
                                     maxWidth: {
                                         xs: '100%',
@@ -429,10 +444,10 @@ function MessageList(props) {
                                     maxHeight: '200px',
                                 }}/>
                         )
-                        : (mensagem.texto)
+                        : (message.texto)
                         }
                     </Box>
-                    {props.userLogado == mensagem.de && (
+                    {props.loggedUser == message.de && (
                     <DeleteMessage deleteSignal={deleteMessageSignal}/>
                     )}
                 </Box>    

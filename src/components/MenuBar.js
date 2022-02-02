@@ -1,9 +1,11 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { Box, Button, Text, Image } from '@skynexui/components';
 import appConfig from '../../config.json';
 
 export function MenuBar(props) {
   const loggedUser = props.loggedUser;
+  const routing = useRouter();
 
   return (
     <>
@@ -45,6 +47,9 @@ export function MenuBar(props) {
 
               <Box
               rounded='none'
+              onClick={(event) => {
+                routing.push(`/chat?username=${loggedUser}`);
+              }}
               styleSheet={{
                   backgroundColor: appConfig.theme.colors.neutrals['300'],
                   borderRadius: '2px',
@@ -69,6 +74,9 @@ export function MenuBar(props) {
 
               <Box
               rounded='none'
+              onClick={(event) => {
+                routing.push(`/profile?username=${loggedUser}`);
+              }}
               styleSheet={{
                   display: 'flex', justifyContent: 'center', alignItems: 'center',
                   backgroundColor: appConfig.theme.colors.neutrals['300'],

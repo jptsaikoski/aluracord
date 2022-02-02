@@ -2,13 +2,13 @@ import { Box, Text } from '@skynexui/components';
 import appConfig from '../../config.json';
 
 export function Window(props) {
-    const windowTitle = props.windowTitle || 'Num deu';
+    const windowTitle = props.windowTitle || 'Window';
     const display = props.display || 'flex';
 
     return (
       <>
       {/* Janela da aplicação - INICIO */}
-      <div className="window">
+      <div className="window" style={props.styleRules}>
         
             {/* Topo da janela - INICIO */}
             <Box
@@ -41,10 +41,10 @@ export function Window(props) {
                 flexDirection: 'row', justifyContent: 'space-between'}}>
 
                 <div className="windowtop">
-                  <div className="listra"></div>
-                  <div className="listra"></div>
-                  <div className="listra"></div>
-                  <div className="listra"></div>
+                  <div className="stripe"></div>
+                  <div className="stripe"></div>
+                  <div className="stripe"></div>
+                  <div className="stripe"></div>
                 </div>
                 
                 {/* Título da aplicação - INICIO */}
@@ -65,10 +65,10 @@ export function Window(props) {
                 {/* Título da aplicação - FIM */}
 
                 <div className="windowtop">
-                  <div className="listra"></div>
-                  <div className="listra"></div>
-                  <div className="listra"></div>
-                  <div className="listra"></div>
+                  <div className="stripe"></div>
+                  <div className="stripe"></div>
+                  <div className="stripe"></div>
+                  <div className="stripe"></div>
                 </div>
 
                 
@@ -127,7 +127,7 @@ export function Window(props) {
           flex-direction: column;
           justify-content: space-evenly;
         }
-        .listra {
+        .stripe {
           background-color: ${appConfig.theme.colors.neutrals['400']};
           width: 100%;
           height: 1px;

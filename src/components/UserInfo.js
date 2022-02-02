@@ -9,8 +9,8 @@ export function UserInfo(props) {
   const isUserInfoOpen = props.isUserInfoOpen || false;
   const whatUserIs = props.whatUserIs;
 
-  function getUserData(x) {
-    fetch(`https://api.github.com/users/${x}`)
+  function getUserData(user) {
+    fetch(`https://api.github.com/users/${user}`)
           .then((response) => {
             return response.json();
           })
