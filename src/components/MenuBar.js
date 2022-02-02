@@ -29,7 +29,14 @@ export function MenuBar(props) {
           border: '1px solid',
           borderColor: appConfig.theme.colors.neutrals['400'],
           padding: '2px',
-          marginRight: '16px'
+          marginRight: {
+              xs: '0px',
+              lg: '16px'
+          },
+          marginBottom: {
+              xs: '16px',
+              lg: '0px'
+          }
       }}>
           <Box styleSheet={{
           display: 'flex',

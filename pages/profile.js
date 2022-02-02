@@ -60,7 +60,7 @@ export default function ProfilePage() {
     return (
         <Box
           styleSheet={{
-            display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end',
+            display: 'flex', alignItems: {xs: 'center', lg: 'flex-start'}, justifyContent: 'flex-end',
             flexDirection: {
                 xs: 'column',
                 lg: 'row',
