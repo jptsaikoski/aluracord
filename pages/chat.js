@@ -7,6 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/router';
 import { SendSticker } from '../src/components/SendSticker';
 import { UserInfo } from '../src/components/UserInfo';
+import { MenuBar } from '../src/components/MenuBar';
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMyNDMzNCwiZXhwIjoxOTU4OTAwMzM0fQ.8IZZRsM8OxQaB6h3a8MHNsz2Gl-CbTgbFiOqlEZ-LhQ';
 const SUPABASE_URL = 'https://hvcyaxgayljwzrrrxbfv.supabase.co';
@@ -113,10 +114,14 @@ export default function ChatPage() {
     return (
         <Box
           styleSheet={{
-            display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end',
+            display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end',
+            flexDirection: {
+                xs: 'column',
+                lg: 'row',
+            }, 
             backgroundColor: '#091B15',
             backgroundImage: `url(${gifUrl})`, minHeight: '100%',
-            backgroundRepeat: 'no-repeat', backgroundSize: 'cover', maxHeight: '100vh',
+            backgroundRepeat: 'no-repeat', backgroundSize: 'cover', maxHeight: {xs: 'calc(100vh + 72px + 16px)',lg:'100vh'},
             transition: 'all 0.05s',
             padding: {
                 xs: '24px',
@@ -124,164 +129,170 @@ export default function ChatPage() {
             },
           }}>
 
-        <Box 
-            styleSheet={{
-                height: '100%',
-                width: '100%',
-                maxWidth: {
-                    xs: '100%',
-                    md: '800px',
-                },
-            }}>
-            <Window windowTitle='Chat Global' 
-            closeButton={() => {
-                roteamento.push(`/`);
-            }}>
+            <MenuBar loggedUser={usuarioLogado}/>
 
-            <Box
+            <Box 
                 styleSheet={{
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    backgroundColor: appConfig.theme.colors.neutrals[100],
                     height: '100%',
-                    maxHeight: '100%',
+                    maxHeight: {
+                        xs: 'calc(100% - 72px - 16px)',
+                        lg: ''
+                    },
                     width: '100%',
-                    padding: '16px',
+                    maxWidth: {
+                        xs: '100%',
+                        md: '800px',
+                    },
                 }}>
-                    <Header/>
-                {!isLoaded 
-                ? ( 
-                    <Box styleSheet={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '100%',
-                        height: '100%',
-                    }}>
-                        <Text styleSheet={{fontSize: '24px', marginBottom: '24px'}}>Recuperando dados...</Text>
-                        <div className='loading-bar'>
-                            <div className='loading-bar-content'></div>
-                        </div>
+                <Window windowTitle='Chat Global' 
+                closeButton={() => {
+                    roteamento.push(`/`);
+                }}>
 
-                        <style jsx>{`
-                            @keyframes load {
-                                0% {width: 0px}
-                                30% {width: 30%}
-                                50% {width: 40%}
-                                70% {width: 80%}
-                                100% {width: 95%}
-                              }
-                            .loading-bar {
-                                width: 200px;
-                                height: 24px;
-                                border: 1px solid ${appConfig.theme.colors.neutrals[700]};
-                            }
-                            .loading-bar-content {
-                                width: 0px;
-                                height: 24px;
-                                float: left;
-                                background-color: ${appConfig.theme.colors.neutrals[400]};
-                                animation: load 4s;
-                            }
-
-                        `}</style>
-                    </Box>
-                ) 
-                : (
                 <Box
                     styleSheet={{
                         overflow: 'hidden',
                         display: 'flex',
-                        height: '100%',
                         flexDirection: 'column',
-                        border: '1px solid',
-                        borderColor: appConfig.theme.colors.neutrals[400],
-                        borderRadius: '2px',
+                        backgroundColor: appConfig.theme.colors.neutrals[100],
+                        height: '100%',
+                        maxHeight: '100%',
+                        width: '100%',
                         padding: '16px',
                     }}>
-                    
-                    <MessageList 
-                        mensagens={listaDeMensagens}
-                        delete={deleteMensagem}
-                        userLogado={usuarioLogado} />
-
-                    <Box
-                        as="form"
-                        styleSheet={{
+                        <Header/>
+                    {!isLoaded 
+                    ? ( 
+                        <Box styleSheet={{
                             display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
                             alignItems: 'center',
+                            width: '100%',
+                            height: '100%',
                         }}>
-                        <TextField
-                            type='text'
-                            value={mensagem}
-                            onChange={(event) => {
-                                const valorMensagem = event.target.value;
-                                setMensagem(valorMensagem);
-                            }}
-                            onKeyPress={(event) => {
-                                if (event.key === "Enter") {
-                                    event.preventDefault();
+                            <Text styleSheet={{fontSize: '24px', marginBottom: '24px'}}>Recuperando dados...</Text>
+                            <div className='loading-bar'>
+                                <div className='loading-bar-content'></div>
+                            </div>
 
-                                    handleNovaMensagem(mensagem);
-
+                            <style jsx>{`
+                                @keyframes load {
+                                    0% {width: 0px}
+                                    30% {width: 30%}
+                                    50% {width: 40%}
+                                    70% {width: 80%}
+                                    100% {width: 95%}
                                 }
-                            }}
-                            placeholder="Insira sua mensagem aqui..."
-                            textFieldColors={{
-                                neutral: {
-                                    mainColor: appConfig.theme.colors.neutrals[400],
-                                    mainColorHighlight: appConfig.theme.colors.neutrals[700],
-                                    textColor: appConfig.theme.colors.neutrals[700],
-                                  },
-                            }}
-                            styleSheet={{
-                                width: '100%',
-                                resize: 'none',
-                                padding: '6px 8px',
-                                border: '1px solid',
-                                borderColor: appConfig.theme.colors.neutrals[400],
-                                borderRadius: '2px',
-                                color: appConfig.theme.colors.neutrals[400],
-                                backgroundColor: appConfig.theme.colors.neutrals[100],
-                                marginBottom: '-8px'
-                            }}/>
+                                .loading-bar {
+                                    width: 200px;
+                                    height: 24px;
+                                    border: 1px solid ${appConfig.theme.colors.neutrals[700]};
+                                }
+                                .loading-bar-content {
+                                    width: 0px;
+                                    height: 24px;
+                                    float: left;
+                                    background-color: ${appConfig.theme.colors.neutrals[400]};
+                                    animation: load 4s;
+                                }
 
-                            <SendSticker onStickerClick={handleNovaMensagem}/>
-                            <Button
-                                colorVariant='neutral'
-                                label='Enviar'
-                                rounded='none'
-                                onClick={() => {
-                                    handleNovaMensagem(mensagem);
+                            `}</style>
+                        </Box>
+                    ) 
+                    : (
+                    <Box
+                        styleSheet={{
+                            overflow: 'hidden',
+                            display: 'flex',
+                            height: '100%',
+                            flexDirection: 'column',
+                            border: '1px solid',
+                            borderColor: appConfig.theme.colors.neutrals[400],
+                            borderRadius: '2px',
+                            padding: '16px',
+                        }}>
+                        
+                        <MessageList 
+                            mensagens={listaDeMensagens}
+                            delete={deleteMensagem}
+                            userLogado={usuarioLogado} />
+
+                        <Box
+                            as="form"
+                            styleSheet={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}>
+                            <TextField
+                                type='text'
+                                value={mensagem}
+                                onChange={(event) => {
+                                    const valorMensagem = event.target.value;
+                                    setMensagem(valorMensagem);
+                                }}
+                                onKeyPress={(event) => {
+                                    if (event.key === "Enter") {
+                                        event.preventDefault();
+
+                                        handleNovaMensagem(mensagem);
+
+                                    }
+                                }}
+                                placeholder="Insira sua mensagem aqui..."
+                                textFieldColors={{
+                                    neutral: {
+                                        mainColor: appConfig.theme.colors.neutrals[400],
+                                        mainColorHighlight: appConfig.theme.colors.neutrals[700],
+                                        textColor: appConfig.theme.colors.neutrals[700],
+                                    },
                                 }}
                                 styleSheet={{
-                                    backgroundColor: appConfig.theme.colors.neutrals['100'],
-                                    borderRadius: '2px',
+                                    width: '100%',
+                                    resize: 'none',
+                                    padding: '6px 8px',
                                     border: '1px solid',
-                                    borderTopColor: appConfig.theme.colors.neutrals['400'],
-                                    borderLeftColor: appConfig.theme.colors.neutrals['400'],
-                                    borderRightColor: appConfig.theme.colors.neutrals['400'],
-                                    borderBottomColor: appConfig.theme.colors.neutrals['400'],
-                                    boxShadow: 'inset 2px 3px 1px 0px rgba(255,255,255,1), inset -2px -3px 1px 0px rgba(0,0,0,0.16)',
-                                    marginLeft: '8px',
-                                    paddingTop: '6px',
-                                    paddingBottom: '6px',
-                                }}
-                                buttonColors={{
-                                    contrastColor: appConfig.theme.colors.neutrals["900"],
-                                    mainColor: appConfig.theme.colors.neutrals['100'],
-                                    mainColorLight: appConfig.theme.colors.neutrals['100'],
-                                    mainColorStrong: appConfig.theme.colors.neutrals['200'],
-                                  }}
-                            />
+                                    borderColor: appConfig.theme.colors.neutrals[400],
+                                    borderRadius: '2px',
+                                    color: appConfig.theme.colors.neutrals[400],
+                                    backgroundColor: appConfig.theme.colors.neutrals[100],
+                                    marginBottom: '-8px'
+                                }}/>
+
+                                <SendSticker onStickerClick={handleNovaMensagem}/>
+                                <Button
+                                    colorVariant='neutral'
+                                    label='Enviar'
+                                    rounded='none'
+                                    onClick={() => {
+                                        handleNovaMensagem(mensagem);
+                                    }}
+                                    styleSheet={{
+                                        backgroundColor: appConfig.theme.colors.neutrals['100'],
+                                        borderRadius: '2px',
+                                        border: '1px solid',
+                                        borderTopColor: appConfig.theme.colors.neutrals['400'],
+                                        borderLeftColor: appConfig.theme.colors.neutrals['400'],
+                                        borderRightColor: appConfig.theme.colors.neutrals['400'],
+                                        borderBottomColor: appConfig.theme.colors.neutrals['400'],
+                                        boxShadow: 'inset 2px 3px 1px 0px rgba(255,255,255,1), inset -2px -3px 1px 0px rgba(0,0,0,0.16)',
+                                        marginLeft: '8px',
+                                        paddingTop: '6px',
+                                        paddingBottom: '6px',
+                                    }}
+                                    buttonColors={{
+                                        contrastColor: appConfig.theme.colors.neutrals["900"],
+                                        mainColor: appConfig.theme.colors.neutrals['100'],
+                                        mainColorLight: appConfig.theme.colors.neutrals['100'],
+                                        mainColorStrong: appConfig.theme.colors.neutrals['200'],
+                                    }}
+                                />
+                        </Box>
                     </Box>
+                    )}
                 </Box>
-                )}
+                </Window>
             </Box>
-            </Window>
-        </Box>
         </Box>
     )
 }

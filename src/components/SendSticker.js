@@ -32,8 +32,8 @@ export function SendSticker(props) {
           boxShadow: 'inset 2px 3px 1px 0px rgba(255,255,255,1), inset -2px -3px 1px 0px rgba(0,0,0,0.16)',
           paddingTop: '6px',
           paddingBottom: '6px',
-          backgroundImage: 'url(/static/images/emoji-icon.png)',
-          backgroundSize: '20px',
+          backgroundImage: 'url(/static/images/smile-icon-32.png)',
+          backgroundSize: '16px',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center'
         }}
