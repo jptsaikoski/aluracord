@@ -24,8 +24,11 @@ export default function ChatPage() {
     const routing = useRouter();
     const loggedUser = routing.query.username;
     const [counter, setCounter] = React.useState(0);
-    const [isLoaded, setIsLoaded] = React.useState(true);
+    const [isLoaded, setIsLoaded] = React.useState('');
     const [message, setMessage] = React.useState('');
+    const [replyIsOpen, setReplyIsOpen] = React.useState(false);
+    const [replyMessageID, setReplyMessageID] = React.useState(0);
+    const [replyMessage, setReplyMessage] = React.useState([{id: '', de: '', texto: '', created_at: ''}]);
     const [messageTree, setMessageTree] = React.useState([]);
     const [gifUrl, setGifUrl] = React.useState('/static/images/frame-1.png');
 
@@ -41,7 +44,7 @@ export default function ChatPage() {
                 .then(({data}) => {
                     if (loggedUser != undefined && loggedUser != null && loggedUser != '' ) {
                         setMessageTree(data);
-                        //setIsLoaded(!isLoaded);
+                        setIsLoaded(!isLoaded);
                         changeBackground();
                     } else {
                         alert('Você precisa estar logado para acessar o chat');
@@ -72,11 +75,13 @@ export default function ChatPage() {
 
     },[counter]);
 
-    function handleNewMessage(newMessage) {
+    function handleNewMessage(newMessage, replyNewMessage) {
         const messageData = {
             de: loggedUser,
             texto: newMessage,
+            para: replyNewMessage,
         };
+
 
         if (messageData.texto != '') {
             supabaseClient
@@ -87,6 +92,9 @@ export default function ChatPage() {
         }
         
         setMessage('');
+        setReplyMessageID(0);
+        setReplyMessage([{id: '', de: '', texto: '', created_at: ''}]);
+        setReplyIsOpen(false);
         changeBackground();
     }
 
@@ -125,6 +133,17 @@ export default function ChatPage() {
        }
 
     
+
+    function selectReply(messageID) {
+        setReplyMessageID(messageID);
+        setReplyMessage(messageTree.filter(checkID));
+        setReplyIsOpen(true);
+
+        function checkID(rightMessage) {
+            return rightMessage.id === messageID;
+        }
+    }
+
 
     return (
         <Box
@@ -231,12 +250,127 @@ export default function ChatPage() {
                         <MessageList 
                             messageList={messageTree}
                             delete={deleteMessage}
-                            loggedUser={loggedUser} />
+                            loggedUser={loggedUser}
+                            replySelector={selectReply} />
                         
-                        
+                        {replyIsOpen && 
+                        ( 
                         <Box styleSheet={{
+                        overflow: 'hidden',
+                           width: '100%' ,
+                           minHeight: '48px',
+                           maxHeight: '72px',
+                           backgroundColor: appConfig.theme.colors.neutrals[200],
+                           marginBottom: '8px',
+                           border: '1px solid',
+                           borderColor: appConfig.theme.colors.neutrals[400],
+                           borderRadius: '2px',
+                           display: 'block'
+                        }}>
                             
-                        }}></Box>
+                            <Box 
+                            key={replyMessage[0].id}
+                            tag="li" styleSheet={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'flex-start',
+                                width: '100%',
+                                minHeight: '48px',
+                                padding: '6px',
+
+                            }}>
+                                <Box
+                                styleSheet={{
+                                    borderRadius: '1px',
+                                    backgroundColor: '',
+                                    color: appConfig.theme.colors.neutrals[700],
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                    minHeight: '48px',
+                                    overflowX: 'hidden',
+                                    whiteSpace: 'wrap',
+                                    wordBreak: 'break-word',
+                                    fontSize: '14px'
+                                }}>
+                                    <Box
+                                    styleSheet={{
+                                        marginBottom: '4px',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}>
+
+                                        <Image
+                                        styleSheet={{
+                                            width: '16px',
+                                            height: '16px',
+                                            borderRadius: '1px',
+                                            border: '1px solid',
+                                            borderColor : appConfig.theme.colors.neutrals[400],
+                                            display: 'inline-block',
+                                            marginRight: '8px',
+                                            cursor: 'pointer'
+                                        }}
+                                        src={`https://github.com/${replyMessage[0].de}.png`}/>
+
+
+                                        <Text tag="strong" 
+                                        styleSheet={{
+                                        color: appConfig.theme.colors.neutrals[700],
+                                        fontSize: '14px'
+                                        }}>
+                                            {replyMessage[0].de}
+                                        </Text>
+                                        <Text
+                                            styleSheet={{
+                                                fontSize: '12px',
+                                                marginLeft: '8px',
+                                                color: appConfig.theme.colors.neutrals[400],
+                                                fontSize: '12px'
+                                            }}
+                                            tag="span">
+                                            {replyMessage[0].created_at.substring(0,10)}
+                                        </Text>
+                                    </Box>
+                                    {replyMessage[0].texto.startsWith(':sticker:')
+                                    ? (
+                                        <Image src={replyMessage[0].texto.replace(':sticker:', '')}
+                                            styleSheet={{
+                                                maxWidth: '24px',
+                                                maxHeight: '24px',
+                                            }}/>
+                                    )
+                                    : (replyMessage[0].texto)
+                                    }
+                                </Box>
+                                <Box 
+                                onClick={() => {
+                                    setReplyMessageID(0);
+                                    setReplyMessage([{id: '', de: '', texto: '', created_at: ''}]);
+                                    setReplyIsOpen(false);
+                                }}
+                                styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'center',
+                                width: '20px', height: '20px', minWidth: '20px', position: 'relative',
+                                backgroundColor: '', 
+                                borderRadius: '1px', border: '1px solid', marginLeft: '0px',
+                                borderColor: appConfig.theme.colors.neutrals['400'], cursor: 'pointer',
+                                }}>
+                                    
+                                    <Box styleSheet={{
+                                    position: 'absolute',
+                                    minWidth: '26px', height: '1px', transform: 'rotate(45deg)',
+                                    backgroundColor: appConfig.theme.colors.neutrals['400'],
+                                    marginTop: '0px', marginBottom: '0px',}}></Box>
+                                    <Box styleSheet={{
+                                    position: 'absolute',
+                                    minWidth: '26px', height: '1px', transform: 'rotate(-45deg)',
+                                    backgroundColor: appConfig.theme.colors.neutrals['400'],
+                                    marginTop: '0px', marginBottom: '0px',}}></Box>
+
+                                </Box>
+                            </Box>
+                        </Box>
+                        )}
 
                         <Box
                             as="form"
@@ -256,7 +390,7 @@ export default function ChatPage() {
                                     if (event.key === "Enter") {
                                         event.preventDefault();
 
-                                        handleNewMessage(message);
+                                        handleNewMessage(message, replyMessageID);
 
                                     }
                                 }}
@@ -286,7 +420,7 @@ export default function ChatPage() {
                                     label='Enviar'
                                     rounded='none'
                                     onClick={() => {
-                                        handleNewMessage(message);
+                                        handleNewMessage(message, replyMessageID);
                                     }}
                                     styleSheet={{
                                         backgroundColor: appConfig.theme.colors.neutrals['100'],
@@ -381,13 +515,28 @@ function MessageList(props) {
                 function deleteMessageSignal() {
                     props.delete(message.id, message.de);
                 }
+                function selectReply() {
+                    const replyMessage = (props.messageList.filter(checkID));
+                    const replyMessageEmpty = [{id: '', created_at: '', de: '', texto: '', para: ''}];
+                
+                    function checkID(rightMessage) {
+                        return rightMessage.id === message.para;
+                    }
+                    if (replyMessage[0] != undefined && replyMessage[0] != 0) {
+                        return replyMessage;
+                    } else {
+                        return replyMessageEmpty;
+                    }
+                        
+                }
+                const replyMessageFinal = selectReply();
                 return (
                 <Box 
                 key={message.id}
                 tag="li" styleSheet={{
                     display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
                     alignItems: 'flex-start',
                     width: '100%',
                     border: '1px solid',
@@ -399,6 +548,111 @@ function MessageList(props) {
                     padding: '6px',
                     
                 }}>
+
+                {message.para != '' && message.para != undefined && message.para != null && message.para != 0 
+                ?  
+
+                ( 
+                        <Box styleSheet={{
+                        overflow: 'hidden',
+                        width: '100%' ,
+                        minHeight: '48px',
+                        maxHeight: '72px',
+                        backgroundColor: appConfig.theme.colors.neutrals[200],
+                        marginBottom: '8px',
+                        border: '1px solid',
+                        borderLeft: '3px solid',
+                        borderColor: appConfig.theme.colors.neutrals[400],
+                        borderLeftColor: appConfig.theme.colors.neutrals[400],
+                        borderRadius: '2px',
+                        }}>
+                            
+                            <Box 
+                            key={replyMessageFinal[0].id}
+                            tag="" styleSheet={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'flex-start',
+                                width: '100%',
+                                padding: '6px',
+
+                            }}>
+                                <Box
+                                styleSheet={{
+                                    borderRadius: '1px',
+                                    backgroundColor: '',
+                                    color: appConfig.theme.colors.neutrals[700],
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                    overflowX: 'hidden',
+                                    whiteSpace: 'wrap',
+                                    wordBreak: 'break-word',
+                                    fontSize: '14px'
+                                }}>
+                                    <Box
+                                    styleSheet={{
+                                        marginBottom: '4px',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}>
+
+                                        <Image
+                                        styleSheet={{
+                                            width: '16px',
+                                            height: '16px',
+                                            borderRadius: '1px',
+                                            border: '1px solid',
+                                            borderColor : appConfig.theme.colors.neutrals[400],
+                                            display: 'inline-block',
+                                            marginRight: '8px',
+                                            cursor: 'pointer'
+                                        }}
+                                        src={`https://github.com/${replyMessageFinal[0].de}.png`}/>
+
+
+                                        <Text tag="strong" 
+                                        styleSheet={{
+                                        color: appConfig.theme.colors.neutrals[700],
+                                        fontSize: '14px'
+                                        }}>
+                                            {replyMessageFinal[0].de}
+                                        </Text>
+                                        <Text
+                                            styleSheet={{
+                                                fontSize: '12px',
+                                                marginLeft: '8px',
+                                                color: appConfig.theme.colors.neutrals[400],
+                                                fontSize: '12px'
+                                            }}
+                                            tag="span">
+                                            {replyMessageFinal[0].created_at.substring(0,10)}
+                                        </Text>
+                                    </Box>
+                                    {replyMessageFinal[0].texto.startsWith(':sticker:')
+                                    ? (
+                                        <Image src={replyMessageFinal[0].texto.replace(':sticker:', '')}
+                                            styleSheet={{
+                                                maxWidth: '24px',
+                                                maxHeight: '24px',
+                                            }}/>
+                                    )
+                                    : (replyMessageFinal[0].texto)
+                                    }
+                                </Box>
+                            </Box>
+                        </Box>
+                )
+                : '' }
+
+                    <Box styleSheet={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    width: '100%',
+                    }}>
+
                     <Box
                         styleSheet={{
                             borderRadius: '1px',
@@ -454,6 +708,9 @@ function MessageList(props) {
                         }
                     </Box>
                     <Box
+                    onClick={() => {
+                        props.replySelector(message.id);
+                    }}
                     styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'center',
                     width: '20px', height: '20px', minWidth: '20px', position: 'relative',
                     backgroundColor: '', 
@@ -463,10 +720,14 @@ function MessageList(props) {
                     backgroundSize: '16px',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
+                    marginRight: '8px'
                     }}></Box>
                     {props.loggedUser == message.de && (
                     <DeleteMessage deleteSignal={deleteMessageSignal}/>
                     )}
+
+                    </Box>
+                    
                 </Box>    
                 );
 
