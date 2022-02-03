@@ -232,6 +232,11 @@ export default function ChatPage() {
                             messageList={messageTree}
                             delete={deleteMessage}
                             loggedUser={loggedUser} />
+                        
+                        
+                        <Box styleSheet={{
+                            
+                        }}></Box>
 
                         <Box
                             as="form"
@@ -239,6 +244,7 @@ export default function ChatPage() {
                                 display: 'flex',
                                 alignItems: 'center',
                             }}>
+
                             <TextField
                                 type='text'
                                 value={message}
@@ -447,6 +453,17 @@ function MessageList(props) {
                         : (message.texto)
                         }
                     </Box>
+                    <Box
+                    styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'center',
+                    width: '20px', height: '20px', minWidth: '20px', position: 'relative',
+                    backgroundColor: '', 
+                    borderRadius: '1px', border: '1px solid', marginLeft: '0px',
+                    borderColor: appConfig.theme.colors.neutrals['400'], cursor: 'pointer',
+                    backgroundImage: 'url(/static/images/reply-icon-32.png)',
+                    backgroundSize: '16px',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    }}></Box>
                     {props.loggedUser == message.de && (
                     <DeleteMessage deleteSignal={deleteMessageSignal}/>
                     )}

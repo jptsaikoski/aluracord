@@ -116,6 +116,9 @@ export function MenuBar(props) {
 
               <Box
               rounded='none'
+              onClick={(event) => {
+                routing.push(`/about?username=${loggedUser}`);
+              }}
               styleSheet={{
                   backgroundColor: appConfig.theme.colors.neutrals['300'],
                   borderRadius: '2px',
