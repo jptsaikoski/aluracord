@@ -64,19 +64,30 @@ export default function ChatPage() {
 
         realtimeMessageUpdate((newMessage) => {
           setMessageTree((actualTree) => {
-            const messageNotification = new Notification(newMessage.de + ' - Aluracord', {
-              body: newMessage.texto,
-              icon: `https://github.com/${newMessage.de}.png`,
-            });
+            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+              console.log('Este dispositivo não suporta notificações.');
+            } else {
+              const messageNotification = new Notification(newMessage.de + ' - Aluracord', {
+                body: newMessage.texto,
+                icon: `https://github.com/${newMessage.de}.png`,
+              });
+            }
             return [newMessage, ...actualTree];
           });
         });
 
         
         function checkNotificationPermission() {
-          if (Notification.permission !== 'denied') {
-            Notification.requestPermission();
-          }
+          if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            console.log('Este dispositivo não suporta notificações.');
+           } else {
+             
+             if (Notification.permission !== 'denied') {
+               Notification.requestPermission();
+             }
+
+           }
+           
         }
           
         checkNotificationPermission();
