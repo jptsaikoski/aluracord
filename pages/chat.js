@@ -50,9 +50,12 @@ export default function ChatPage() {
               loggedUser != null &&
               loggedUser != ""
             ) {
+
+
               setMessageTree(data);
               //setIsLoaded(!isLoaded);
               changeBackground();
+
             } else {
               alert("Você precisa estar logado para acessar o chat");
               routing.push("/");
@@ -61,9 +64,23 @@ export default function ChatPage() {
 
         realtimeMessageUpdate((newMessage) => {
           setMessageTree((actualTree) => {
+            const messageNotification = new Notification(newMessage.de + ' - Aluracord', {
+              body: newMessage.texto,
+              icon: `https://github.com/${newMessage.de}.png`,
+            });
             return [newMessage, ...actualTree];
           });
         });
+
+        
+        function checkNotificationPermission() {
+          if (Notification.permission !== 'denied') {
+            Notification.requestPermission();
+          }
+        }
+          
+        checkNotificationPermission();
+
       } else {
         setCounter(counter + 1);
       }
