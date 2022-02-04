@@ -66,7 +66,7 @@ export default function ChatPage() {
           setMessageTree((actualTree) => {
             if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
               console.log('Este dispositivo não suporta notificações.');
-            } else {
+            } else if (newMessage.de !== loggedUser) {
               const messageNotification = new Notification(newMessage.de + ' - Aluracord', {
                 body: newMessage.texto,
                 icon: `https://github.com/${newMessage.de}.png`,

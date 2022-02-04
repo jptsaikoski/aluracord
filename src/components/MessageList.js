@@ -77,7 +77,7 @@ export function MessageList(props) {
                   styleSheet={{
                     overflow: "hidden",
                     width: "100%",
-                    minHeight: "48px",
+                    minHeight: "36px",
                     maxHeight: "72px",
                     backgroundColor: appConfig.theme.colors.neutrals[200],
                     marginBottom: "8px",
@@ -120,6 +120,9 @@ export function MessageList(props) {
                           alignItems: "center",
                         }}
                       >
+                        {replyMessageFinal[0].de != "" &&
+                        replyMessageFinal[0].de != undefined &&
+                        replyMessageFinal[0].de != null ? (
                         <Image
                           styleSheet={{
                             width: "16px",
@@ -133,6 +136,7 @@ export function MessageList(props) {
                           }}
                           src={`https://github.com/${replyMessageFinal[0].de}.png`}
                         />
+                        ) : ''}
 
                         <Text
                           tag="strong"
@@ -167,7 +171,7 @@ export function MessageList(props) {
                           }}
                         />
                       ) : (
-                        replyMessageFinal[0].texto
+                        replyMessageFinal[0].texto || 'Essa mensagem foi apagada.'
                       )}
                     </Box>
                   </Box>
