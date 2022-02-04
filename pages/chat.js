@@ -1,11 +1,11 @@
-import { Box, Text, TextField, Image, Button } from "@skynexui/components";
+import { Box, Text, Image, Button } from "@skynexui/components";
 import React from "react";
 import appConfig from "../config.json";
 import { Window } from "../src/components/Window";
 import { useRouter } from "next/router";
-import { SendSticker } from "../src/components/SendSticker";
 import { MenuBar } from "../src/components/MenuBar";
 import { MessageList } from "../src/components/MessageList";
+import { MessageInput } from "../src/components/MessageInput";
 import { supabaseClient } from "../src/components/Supabase";
 
 function realtimeMessageUpdate(addMessage) {
@@ -21,8 +21,7 @@ export default function ChatPage() {
   const routing = useRouter();
   const loggedUser = routing.query.username;
   const [counter, setCounter] = React.useState(0);
-  const [isLoaded, setIsLoaded] = React.useState(true);
-  const [message, setMessage] = React.useState("");
+  const [isLoaded, setIsLoaded] = React.useState('');
   const [replyIsOpen, setReplyIsOpen] = React.useState(false);
   const [replyMessageID, setReplyMessageID] = React.useState(0);
   const [replyMessage, setReplyMessage] = React.useState([
@@ -53,7 +52,7 @@ export default function ChatPage() {
 
 
               setMessageTree(data);
-              //setIsLoaded(!isLoaded);
+              setIsLoaded(!isLoaded);
               changeBackground();
 
             } else {
@@ -115,7 +114,6 @@ export default function ChatPage() {
         .then(({ data }) => {});
     }
 
-    setMessage("");
     setReplyMessageID(0);
     setReplyMessage([{ id: "", de: "", texto: "", created_at: "" }]);
     setReplyIsOpen(false);
@@ -450,71 +448,9 @@ export default function ChatPage() {
                     alignItems: "center",
                   }}
                 >
-                  <TextField
-                    type="text"
-                    value={message}
-                    onChange={(event) => {
-                      const messageValue = event.target.value;
-                      setMessage(messageValue);
-                    }}
-                    onKeyPress={(event) => {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
+                  
+                  <MessageInput sendMessage={handleNewMessage} sendSticker={handleNewMessage} getReplyID={replyMessageID} />
 
-                        handleNewMessage(message, replyMessageID);
-                      }
-                    }}
-                    placeholder="Insira sua mensagem aqui..."
-                    textFieldColors={{
-                      neutral: {
-                        mainColor: appConfig.theme.colors.neutrals[400],
-                        mainColorHighlight:
-                          appConfig.theme.colors.neutrals[700],
-                        textColor: appConfig.theme.colors.neutrals[700],
-                      },
-                    }}
-                    styleSheet={{
-                      width: "100%",
-                      resize: "none",
-                      padding: "6px 8px",
-                      border: "1px solid",
-                      borderColor: appConfig.theme.colors.neutrals[400],
-                      borderRadius: "2px",
-                      color: appConfig.theme.colors.neutrals[400],
-                      backgroundColor: appConfig.theme.colors.neutrals[100],
-                      marginBottom: "-8px",
-                    }}
-                  />
-
-                  <SendSticker onStickerClick={handleNewMessage} />
-                  <Button
-                    colorVariant="neutral"
-                    label="Enviar"
-                    rounded="none"
-                    onClick={() => {
-                      handleNewMessage(message, replyMessageID);
-                    }}
-                    styleSheet={{
-                      backgroundColor: appConfig.theme.colors.neutrals["100"],
-                      borderRadius: "2px",
-                      border: "1px solid",
-                      borderTopColor: appConfig.theme.colors.neutrals["400"],
-                      borderLeftColor: appConfig.theme.colors.neutrals["400"],
-                      borderRightColor: appConfig.theme.colors.neutrals["400"],
-                      borderBottomColor: appConfig.theme.colors.neutrals["400"],
-                      boxShadow:
-                        "inset 2px 3px 1px 0px rgba(255,255,255,1), inset -2px -3px 1px 0px rgba(0,0,0,0.16)",
-                      marginLeft: "8px",
-                      paddingTop: "6px",
-                      paddingBottom: "6px",
-                    }}
-                    buttonColors={{
-                      contrastColor: appConfig.theme.colors.neutrals["900"],
-                      mainColor: appConfig.theme.colors.neutrals["100"],
-                      mainColorLight: appConfig.theme.colors.neutrals["100"],
-                      mainColorStrong: appConfig.theme.colors.neutrals["200"],
-                    }}
-                  />
                 </Box>
               </Box>
             )}
