@@ -7,6 +7,7 @@ import { MenuBar } from "../src/components/MenuBar";
 import { MessageList } from "../src/components/MessageList";
 import { MessageInput } from "../src/components/MessageInput";
 import { supabaseClient } from "../src/components/Supabase";
+import Head from "next/head";
 
 function realtimeMessageUpdate(addMessage) {
   return supabaseClient
@@ -21,7 +22,7 @@ export default function ChatPage() {
   const routing = useRouter();
   const loggedUser = routing.query.username;
   const [counter, setCounter] = React.useState(0);
-  const [isLoaded, setIsLoaded] = React.useState('');
+  const [isLoaded, setIsLoaded] = React.useState(true);
   const [replyIsOpen, setReplyIsOpen] = React.useState(false);
   const [replyMessageID, setReplyMessageID] = React.useState(0);
   const [replyMessage, setReplyMessage] = React.useState([
@@ -29,6 +30,7 @@ export default function ChatPage() {
   ]);
   const [messageTree, setMessageTree] = React.useState([]);
   const [gifUrl, setGifUrl] = React.useState("/static/images/frame-1.png");
+  const [headTitle, setHeadTitle] = React.useState('');
 
   React.useEffect(() => {
     if (counter < 10) {
@@ -52,7 +54,7 @@ export default function ChatPage() {
 
 
               setMessageTree(data);
-              setIsLoaded(!isLoaded);
+              //setIsLoaded(!isLoaded);
               changeBackground();
 
             } else {
@@ -63,15 +65,24 @@ export default function ChatPage() {
 
         realtimeMessageUpdate((newMessage) => {
           setMessageTree((actualTree) => {
+            //Notificações -
             if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
               console.log('Este dispositivo não suporta notificações.');
             } else if (newMessage.de !== loggedUser) {
+
               const messageNotification = new Notification(newMessage.de + ' - Aluracord', {
                 body: newMessage.texto,
                 icon: `https://github.com/${newMessage.de}.png`,
               });
+              
+              setHeadTitle('Nova mensagem recebida!');
+              
+
             }
+            //Notificações --
+
             return [newMessage, ...actualTree];
+
           });
         });
 
@@ -90,6 +101,25 @@ export default function ChatPage() {
         }
           
         checkNotificationPermission();
+        
+        const onFocus = () => {
+          if (headTitle !== appConfig.name) {
+            setHeadTitle(appConfig.name);
+          }
+        };
+
+        const WindowFocusHandler = () => {
+              window.addEventListener("focus", onFocus);
+              onFocus();
+              return () => {
+                  window.removeEventListener("focus", onFocus);
+              }
+      }
+
+      WindowFocusHandler();
+
+      /* const notificationSound = new Audio('/static/sounds/Whit.wav');
+      notificationSound.play(); */
 
       } else {
         setCounter(counter + 1);
@@ -165,6 +195,10 @@ export default function ChatPage() {
   }
 
   return (
+    <>
+    <Head>
+        <title>{headTitle || appConfig.name}</title>
+      </Head>
     <Box
       styleSheet={{
         display: "flex",
@@ -209,6 +243,7 @@ export default function ChatPage() {
             routing.push(`/`);
           }}
         >
+
           <Box
             styleSheet={{
               overflow: "hidden",
@@ -458,6 +493,7 @@ export default function ChatPage() {
         </Window>
       </Box>
     </Box>
+    </>
   );
 }
 
