@@ -30,7 +30,9 @@ export function MessageList(props) {
         }}
       >
         {props.messageList.map((message) => {
-          const date = message.created_at.substring(0, 10);
+          //const date = message.created_at.substring(0, 10);
+          const dateUTC = new Date(message.created_at); 
+          const date = dateUTC.toLocaleString();
           function deleteMessageSignal() {
             props.delete(message.id, message.de);
           }
@@ -50,6 +52,8 @@ export function MessageList(props) {
             }
           }
           const replyMessageFinal = selectReply();
+          const replyDateUTC = new Date(replyMessageFinal[0].created_at); 
+          const replyDate = replyDateUTC.toLocaleString();
           return (
             <Box
               key={message.id}
@@ -156,7 +160,7 @@ export function MessageList(props) {
                           }}
                           tag="span"
                         >
-                          {replyMessageFinal[0].created_at.substring(0, 10)}
+                          {replyDate}
                         </Text>
                       </Box>
                       {replyMessageFinal[0].texto.startsWith(":sticker:") ? (

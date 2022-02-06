@@ -76,7 +76,6 @@ export default function ChatPage() {
               });
               
               setHeadTitle('Nova mensagem recebida!');
-              
 
             }
             //Notificações --
@@ -117,9 +116,6 @@ export default function ChatPage() {
       }
 
       WindowFocusHandler();
-
-      /* const notificationSound = new Audio('/static/sounds/Whit.wav');
-      notificationSound.play(); */
 
       } else {
         setCounter(counter + 1);
