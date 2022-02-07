@@ -6,12 +6,13 @@ import { useRouter } from "next/router";
 import { MenuBar } from "../src/components/MenuBar";
 import { MessageList } from "../src/components/MessageList";
 import { MessageInput } from "../src/components/MessageInput";
+import { ChatHeader } from "../src/components/ChatHeader";
 import { supabaseClient } from "../src/components/Supabase";
 import Head from "next/head";
 
 function realtimeMessageUpdate(addMessage) {
   return supabaseClient
-    .from("mensagens")
+    .from("global-chat")
     .on("INSERT", (newMessage) => {
       addMessage(newMessage.new);
     })
@@ -31,6 +32,7 @@ export default function ChatPage() {
   const [messageTree, setMessageTree] = React.useState([]);
   const [gifUrl, setGifUrl] = React.useState("/static/images/frame-1.png");
   const [headTitle, setHeadTitle] = React.useState('');
+  const [chatList, setChatList] = React.useState([]);
 
   React.useEffect(() => {
     if (counter < 10) {
@@ -41,7 +43,7 @@ export default function ChatPage() {
         loggedUser != "undefined"
       ) {
         supabaseClient
-          .from("mensagens")
+          .from("global-chat")
           .select("*")
           .range(0, 19)
           .order("id", { ascending: false })
@@ -107,7 +109,7 @@ export default function ChatPage() {
           }
         };
 
-        const WindowFocusHandler = () => {
+        const windowFocusHandler = () => {
               window.addEventListener("focus", onFocus);
               onFocus();
               return () => {
@@ -115,7 +117,7 @@ export default function ChatPage() {
               }
       }
 
-      WindowFocusHandler();
+      windowFocusHandler();
 
       } else {
         setCounter(counter + 1);
@@ -135,7 +137,7 @@ export default function ChatPage() {
 
     if (messageData.texto != "") {
       supabaseClient
-        .from("mensagens")
+        .from("global-chat")
         .insert([messageData])
         .then(({ data }) => {});
     }
@@ -149,7 +151,7 @@ export default function ChatPage() {
   function deleteMessage(identifier, person) {
     if (loggedUser == person) {
       supabaseClient
-        .from("mensagens")
+        .from("global-chat")
         .delete()
         .match({ id: identifier })
         .then(({ data }) => {
@@ -252,7 +254,7 @@ export default function ChatPage() {
               padding: "16px",
             }}
           >
-            <Header />
+            <ChatHeader />
             {!isLoaded ? (
               <Box
                 styleSheet={{
@@ -489,48 +491,6 @@ export default function ChatPage() {
         </Window>
       </Box>
     </Box>
-    </>
-  );
-}
-
-function Header() {
-  return (
-    <>
-      <Box
-        styleSheet={{
-          width: "100%",
-          marginBottom: "16px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Button
-          colorVariant="neutral"
-          label="Sair"
-          href="/"
-          rounded="none"
-          styleSheet={{
-            backgroundColor: appConfig.theme.colors.neutrals["100"],
-            borderRadius: "2px",
-            border: "1px solid",
-            borderTopColor: appConfig.theme.colors.neutrals["400"],
-            borderLeftColor: appConfig.theme.colors.neutrals["400"],
-            borderRightColor: appConfig.theme.colors.neutrals["400"],
-            borderBottomColor: appConfig.theme.colors.neutrals["400"],
-            boxShadow:
-              "inset 2px 3px 1px 0px rgba(255,255,255,1), inset -2px -3px 1px 0px rgba(0,0,0,0.16)",
-            paddingTop: "6px",
-            paddingBottom: "6px",
-          }}
-          buttonColors={{
-            contrastColor: appConfig.theme.colors.neutrals["900"],
-            mainColor: appConfig.theme.colors.neutrals["100"],
-            mainColorLight: appConfig.theme.colors.neutrals["100"],
-            mainColorStrong: appConfig.theme.colors.neutrals["200"],
-          }}
-        />
-      </Box>
     </>
   );
 }
