@@ -31,28 +31,7 @@ export default function PaginaInicial() {
     location: "",
   });
   const [gifUrl, setGifUrl] = React.useState("/static/images/frame-1.png");
-
-  /*React.useEffect(function () {
-
-      fetch(`https://api.github.com/users/${username}`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setUserData(data);
-        console.log(userData);
-      });
-
-    },[])*/
-
-  /*fetch(`https://api.github.com/users/${usernameValid}`)
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            setUserData(data);
-            console.log('O user é: ', userData);
-          });*/
+  const [isRealUser, setIsRealUser] = React.useState(true);
 
   function getUserData(valor) {
     test.forEach(function (timer) {
@@ -67,6 +46,11 @@ export default function PaginaInicial() {
           })
           .then((data) => {
             setUserData(data);
+            if (data.login === valor) {
+              setIsRealUser(false);
+            } else {
+              setIsRealUser(true);
+            }
           });
         changeBackground();
       }, 1000),
@@ -152,7 +136,9 @@ export default function PaginaInicial() {
                 as="form"
                 onSubmit={function (event) {
                   event.preventDefault();
-                  roteamento.push(`/chat?username=${username}`);
+                  if (isRealUser === false) {
+                    roteamento.push(`/chat?username=${username}`);
+                  }
                 }}
                 styleSheet={{
                   display: "flex",
@@ -192,6 +178,7 @@ export default function PaginaInicial() {
                   }}
                 />
                 <Button
+                  disabled={isRealUser}
                   type="submit"
                   label="Entrar"
                   fullWidth
