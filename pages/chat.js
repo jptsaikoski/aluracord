@@ -20,19 +20,19 @@ function realtimeMessageUpdate(addMessage) {
 }
 
 export default function ChatPage() {
-  const routing = useRouter();
-  const loggedUser = routing.query.username;
-  const [counter, setCounter] = React.useState(0);
-  const [isLoaded, setIsLoaded] = React.useState(true);
-  const [replyIsOpen, setReplyIsOpen] = React.useState(false);
-  const [replyMessageID, setReplyMessageID] = React.useState(0);
-  const [replyMessage, setReplyMessage] = React.useState([
+  const routing = useRouter(),
+  loggedUser = routing.query.username,
+  [counter, setCounter] = React.useState(0),
+  [isLoaded, setIsLoaded] = React.useState(''),
+  [replyIsOpen, setReplyIsOpen] = React.useState(false),
+  [replyMessageID, setReplyMessageID] = React.useState(0),
+  [replyMessage, setReplyMessage] = React.useState([
     { id: "", de: "", texto: "", created_at: "" },
-  ]);
-  const [messageTree, setMessageTree] = React.useState([]);
-  const [gifUrl, setGifUrl] = React.useState("/static/images/frame-1.png");
-  const [headTitle, setHeadTitle] = React.useState('');
-  const [chatList, setChatList] = React.useState([]);
+  ]),
+  [messageTree, setMessageTree] = React.useState([]),
+  [gifUrl, setGifUrl] = React.useState("/static/images/frame-1.png"),
+  [headTitle, setHeadTitle] = React.useState(''),
+  [chatList, setChatList] = React.useState([]);
 
   React.useEffect(() => {
     if (counter < 10) {
@@ -45,7 +45,7 @@ export default function ChatPage() {
         supabaseClient
           .from("global-chat")
           .select("*")
-          .range(0, 19)
+          .range(0, 49)
           .order("id", { ascending: false })
           .then(({ data }) => {
             if (
@@ -56,7 +56,7 @@ export default function ChatPage() {
 
 
               setMessageTree(data);
-              //setIsLoaded(!isLoaded);
+              setIsLoaded(!isLoaded);
               changeBackground();
 
             } else {
@@ -215,7 +215,7 @@ export default function ChatPage() {
         transition: "all 0.05s",
         padding: {
           xs: "24px",
-          md: "48px",
+          md: "24px",
         },
       }}
     >
