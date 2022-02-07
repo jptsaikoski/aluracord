@@ -43,6 +43,13 @@ export default function ChatPage() {
         loggedUser != "undefined"
       ) {
         supabaseClient
+          .from("chat-list")
+          .select("*")
+          .then(({ data }) => {
+            setChatList(data);
+          });
+
+        supabaseClient
           .from("global-chat")
           .select("*")
           .range(0, 49)
@@ -254,7 +261,7 @@ export default function ChatPage() {
               padding: "16px",
             }}
           >
-            <ChatHeader />
+            <ChatHeader chatList={chatList} />
             {!isLoaded ? (
               <Box
                 styleSheet={{

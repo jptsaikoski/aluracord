@@ -2,10 +2,15 @@ import React from "react";
 import { useRouter } from "next/router";
 import { Box, TextField, Button } from "@skynexui/components";
 import appConfig from "../../config.json";
+import { supabaseClient } from "./Supabase";
 
 export function ChatHeader(props) {
   const routing = useRouter();
   const chatList = props.chatList;
+
+  React.useEffect(() => {
+    
+  }, [])
 
   function alertEx(option) {
     console.log("A opção selecionada foi: " + option);
@@ -80,11 +85,11 @@ function Select(props) {
         {optionsList.map((option) => {
           return (
             <option
-              key={option}
-              value={option}
+              key={option.id}
+              value={option.chatvalue}
               
             >
-              {option}
+              {option.chatname}
             </option>
           );
         })}
