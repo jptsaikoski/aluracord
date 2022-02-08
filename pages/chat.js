@@ -23,7 +23,7 @@ export default function ChatPage() {
   const routing = useRouter(),
   loggedUser = routing.query.username,
   [counter, setCounter] = React.useState(0),
-  [isLoaded, setIsLoaded] = React.useState(''),
+  [isLoaded, setIsLoaded] = React.useState(true),
   [replyIsOpen, setReplyIsOpen] = React.useState(false),
   [replyMessageID, setReplyMessageID] = React.useState(0),
   [replyMessage, setReplyMessage] = React.useState([
@@ -32,16 +32,18 @@ export default function ChatPage() {
   [messageTree, setMessageTree] = React.useState([]),
   [gifUrl, setGifUrl] = React.useState("/static/images/frame-1.png"),
   [headTitle, setHeadTitle] = React.useState(''),
-  [chatList, setChatList] = React.useState([]);
+  [chatList, setChatList] = React.useState([]),
+  [selectedChat, setSelectedChat] = React.useState(1);
+    console.log('Chat selecionado: ' + selectedChat);
 
   React.useEffect(() => {
-    if (counter < 10) {
+    if(!routing.isReady) return;
       if (
         loggedUser != undefined &&
         loggedUser != null &&
         loggedUser != "" &&
         loggedUser != "undefined"
-      ) {
+        ) {
         supabaseClient
           .from("chat-list")
           .select("*")
@@ -52,24 +54,19 @@ export default function ChatPage() {
         supabaseClient
           .from("global-chat")
           .select("*")
+          .filter('chat_id', 'in', `(${selectedChat})`)
           .range(0, 49)
           .order("id", { ascending: false })
           .then(({ data }) => {
-            if (
-              loggedUser != undefined &&
-              loggedUser != null &&
-              loggedUser != ""
-            ) {
 
 
               setMessageTree(data);
-              setIsLoaded(!isLoaded);
+              setReplyMessageID(0);
+              setReplyMessage([{ id: "", de: "", texto: "", created_at: "", chat_id: ""}]);
+              setReplyIsOpen(false);
+              //setIsLoaded(!isLoaded);
               changeBackground();
 
-            } else {
-              alert("Você precisa estar logado para acessar o chat");
-              routing.push("/");
-            }
           });
 
         realtimeMessageUpdate((newMessage) => {
@@ -122,24 +119,22 @@ export default function ChatPage() {
               return () => {
                   window.removeEventListener("focus", onFocus);
               }
-      }
+        }
 
-      windowFocusHandler();
+        windowFocusHandler();
 
       } else {
-        setCounter(counter + 1);
-      }
-    } else {
-      alert("Você precisa estar logado para acessar essa página.");
+        alert("Você precisa estar logado para acessar essa página.");
       routing.push("/");
-    }
-  }, [counter]);
+      }
+  }, [routing.isReady, selectedChat]);
 
   function handleNewMessage(newMessage, replyNewMessage) {
     const messageData = {
       de: loggedUser,
       texto: newMessage,
       para: replyNewMessage,
+      chat_id: selectedChat,
     };
 
     if (messageData.texto != "") {
@@ -150,7 +145,7 @@ export default function ChatPage() {
     }
 
     setReplyMessageID(0);
-    setReplyMessage([{ id: "", de: "", texto: "", created_at: "" }]);
+    setReplyMessage([{ id: "", de: "", texto: "", created_at: "", chat_id: ""}]);
     setReplyIsOpen(false);
     changeBackground();
   }
@@ -197,6 +192,11 @@ export default function ChatPage() {
     function checkID(rightMessage) {
       return rightMessage.id === messageID;
     }
+  }
+
+  function changeChat(server) {
+    setSelectedChat(server);
+    console.log('Chat selecionado: ' + server);
   }
 
   return (
@@ -261,7 +261,7 @@ export default function ChatPage() {
               padding: "16px",
             }}
           >
-            <ChatHeader chatList={chatList} />
+            <ChatHeader chatList={chatList} chatSelected={changeChat} />
             {!isLoaded ? (
               <Box
                 styleSheet={{

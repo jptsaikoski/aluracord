@@ -12,8 +12,8 @@ export function ChatHeader(props) {
     
   }, [])
 
-  function alertEx(option) {
-    console.log("A opção selecionada foi: " + option);
+  function sendServerOption(server) {
+    props.chatSelected(server);
   }
 
   return (
@@ -57,7 +57,7 @@ export function ChatHeader(props) {
 
         <Select
           optionsList={chatList}
-          selectedOption={alertEx}
+          selectedOption={sendServerOption}
           fullWidth
           styleSheet={{
               marginLeft: '8px',
@@ -86,7 +86,7 @@ function Select(props) {
           return (
             <option
               key={option.id}
-              value={option.chatvalue}
+              value={option.id}
               
             >
               {option.chatname}
