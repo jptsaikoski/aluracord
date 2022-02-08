@@ -34,7 +34,6 @@ export default function ChatPage() {
   [headTitle, setHeadTitle] = React.useState(''),
   [chatList, setChatList] = React.useState([]),
   [selectedChat, setSelectedChat] = React.useState(1);
-    console.log('Chat selecionado: ' + selectedChat);
 
   React.useEffect(() => {
     if(!routing.isReady) return;
@@ -138,10 +137,24 @@ export default function ChatPage() {
     };
 
     if (messageData.texto != "") {
-      supabaseClient
-        .from("global-chat")
-        .insert([messageData])
-        .then(({ data }) => {});
+      
+      if (messageData.texto.startsWith(':sticker:')) {
+        const stickerURL = messageData.texto.replace(":sticker:", "");
+        if (appConfig.stickers.indexOf(stickerURL) > -1) {
+          supabaseClient
+            .from("global-chat")
+            .insert([messageData])
+            .then(({ data }) => {});
+        } else {
+          alert('Sticker inválido! Por favor, utilize os Stickers disponibilizados pelo chat.');
+        }
+
+      } else {
+        supabaseClient
+          .from("global-chat")
+          .insert([messageData])
+          .then(({ data }) => {});
+      }
     }
 
     setReplyMessageID(0);
@@ -196,7 +209,6 @@ export default function ChatPage() {
 
   function changeChat(server) {
     setSelectedChat(server);
-    console.log('Chat selecionado: ' + server);
   }
 
   return (
