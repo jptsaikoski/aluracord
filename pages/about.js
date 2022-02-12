@@ -14,23 +14,20 @@ export default function AboutPage() {
   [backgroundSignal, setBackgroundSignal] = React.useState('');
 
   React.useEffect(() => {
-    if (counter < 10) {
-      if (
-        loggedUser != undefined &&
-        loggedUser != null &&
-        loggedUser != "" &&
-        loggedUser != "undefined"
-      ) {
-        //setIsLoaded(!isLoaded);
-        setBackgroundSignal(!backgroundSignal);
-      } else {
-        setCounter(counter + 1);
-      }
+    if(!routing.isReady) return;
+    if (
+      loggedUser != undefined &&
+      loggedUser != null &&
+      loggedUser != "" &&
+      loggedUser != "undefined"
+    ) {
+      //setIsLoaded(!isLoaded);
+      setBackgroundSignal(!backgroundSignal);
     } else {
       alert("Você precisa estar logado para acessar essa página.");
       routing.push("/");
     }
-  }, [counter]);
+  }, [routing.isReady]);
 
 
   return (

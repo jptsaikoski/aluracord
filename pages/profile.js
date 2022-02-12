@@ -11,7 +11,6 @@ import { Background } from "../src/components/Background";
 export default function ProfilePage() {
   const routing = useRouter(),
   loggedUser = routing.query.username,
-  [counter, setCounter] = React.useState(0),
   [isLoaded, setIsLoaded] = React.useState(""),
   [userData, setUserData] = React.useState({
     name: "",
@@ -22,31 +21,28 @@ export default function ProfilePage() {
   [backgroundSignal, setBackgroundSignal] = React.useState('');;
 
   React.useEffect(() => {
-    if (counter < 10) {
-      if (
-        loggedUser != undefined &&
-        loggedUser != null &&
-        loggedUser != "" &&
-        loggedUser != "undefined"
-      ) {
-        fetch(`https://api.github.com/users/${loggedUser}`)
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            setUserData(data);
-          });
+    if(!routing.isReady) return;
+    if (
+      loggedUser != undefined &&
+      loggedUser != null &&
+      loggedUser != "" &&
+      loggedUser != "undefined"
+    ) {
+      fetch(`https://api.github.com/users/${loggedUser}`)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setUserData(data);
+        });
 
-        setIsLoaded(!isLoaded);
-        setBackgroundSignal(!backgroundSignal);
-      } else {
-        setCounter(counter + 1);
-      }
+      setIsLoaded(!isLoaded);
+      setBackgroundSignal(!backgroundSignal);
     } else {
       alert("Você precisa estar logado para acessar essa página.");
       routing.push("/");
     }
-  }, [counter]);
+  }, [routing.isReady]);
 
   return (
     <Background changeSignal={backgroundSignal}>
