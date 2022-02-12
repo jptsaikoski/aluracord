@@ -3,6 +3,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import appConfig from "../config.json";
 import { Window } from "../src/components/Window";
+import { Background } from "../src/components/Background";
 
 function Titulo(props) {
   const Tag = props.tag || "h1";
@@ -22,16 +23,16 @@ function Titulo(props) {
 }
 
 export default function PaginaInicial() {
-  const [username, setUsername] = React.useState("");
-  const [usernameValid, setUsernameValid] = React.useState("");
-  const [test, setTest] = React.useState([]);
-  const [userData, setUserData] = React.useState({
+  const [username, setUsername] = React.useState(""),
+  [usernameValid, setUsernameValid] = React.useState(""),
+  [test, setTest] = React.useState([]),
+  [userData, setUserData] = React.useState({
     name: "",
     followers: 0,
     location: "",
-  });
-  const [gifUrl, setGifUrl] = React.useState("/static/images/frame-1.png");
-  const [isRealUser, setIsRealUser] = React.useState(true);
+  }),
+  [isRealUser, setIsRealUser] = React.useState(true),
+  [backgroundSignal, setBackgroundSignal] = React.useState('');
 
   function getUserData(valor) {
     test.forEach(function (timer) {
@@ -52,7 +53,7 @@ export default function PaginaInicial() {
               setIsRealUser(true);
             }
           });
-        changeBackground();
+          setBackgroundSignal(!backgroundSignal);
       }, 1000),
       ...test,
     ]);
@@ -66,29 +67,15 @@ export default function PaginaInicial() {
     }
   }
 
-  function changeBackground() {
-    const randomNumber = Math.floor(Math.random() * 3);
-
-    if (gifUrl.endsWith(".gif")) {
-      setGifUrl(`/static/images/frame-${randomNumber}.png`);
-    } else {
-      setGifUrl("/static/images/background-1280-30.gif");
-
-      const gifTimer = setTimeout(function () {
-        setGifUrl(`/static/images/frame-${randomNumber}.png`);
-      }, 2000);
-    }
-  }
-
   React.useEffect(() => {
-    changeBackground();
+    setBackgroundSignal(!backgroundSignal);
   }, []);
 
   const roteamento = useRouter();
 
   return (
     <>
-      <Box
+      {/* <Box
         styleSheet={{
           display: "flex",
           alignItems: "flex-end",
@@ -103,7 +90,8 @@ export default function PaginaInicial() {
             md: "48px",
           },
         }}
-      >
+      > */}
+      <Background changeSignal={backgroundSignal}>
         <Box
           styleSheet={{
             width: "100%",
@@ -258,7 +246,7 @@ export default function PaginaInicial() {
             {/* Conteúdo - FIM */}
           </Window>
         </Box>
-      </Box>
+      </Background>
     </>
   );
 }

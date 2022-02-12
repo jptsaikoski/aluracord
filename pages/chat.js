@@ -7,6 +7,7 @@ import { MenuBar } from "../src/components/MenuBar";
 import { MessageList } from "../src/components/MessageList";
 import { MessageInput } from "../src/components/MessageInput";
 import { ChatHeader } from "../src/components/ChatHeader";
+import { Background } from "../src/components/Background";
 import { supabaseClient } from "../src/components/Supabase";
 import Head from "next/head";
 
@@ -22,7 +23,6 @@ function realtimeMessageUpdate(addMessage) {
 export default function ChatPage() {
   const routing = useRouter(),
   loggedUser = routing.query.username,
-  [counter, setCounter] = React.useState(0),
   [isLoaded, setIsLoaded] = React.useState(true),
   [replyIsOpen, setReplyIsOpen] = React.useState(false),
   [replyMessageID, setReplyMessageID] = React.useState(0),
@@ -30,7 +30,7 @@ export default function ChatPage() {
     { id: "", de: "", texto: "", created_at: "" },
   ]),
   [messageTree, setMessageTree] = React.useState([]),
-  [gifUrl, setGifUrl] = React.useState("/static/images/frame-1.png"),
+  [backgroundSignal, setBackgroundSignal] = React.useState(''),
   [headTitle, setHeadTitle] = React.useState(''),
   [chatList, setChatList] = React.useState([]),
   [selectedChat, setSelectedChat] = React.useState(1);
@@ -64,7 +64,7 @@ export default function ChatPage() {
               setReplyMessage([{ id: "", de: "", texto: "", created_at: "", chat_id: ""}]);
               setReplyIsOpen(false);
               //setIsLoaded(!isLoaded);
-              changeBackground();
+              setBackgroundSignal(!backgroundSignal);
 
           });
 
@@ -160,7 +160,7 @@ export default function ChatPage() {
     setReplyMessageID(0);
     setReplyMessage([{ id: "", de: "", texto: "", created_at: "", chat_id: ""}]);
     setReplyIsOpen(false);
-    changeBackground();
+    setBackgroundSignal(!backgroundSignal);
   }
 
   function deleteMessage(identifier, person) {
@@ -180,7 +180,7 @@ export default function ChatPage() {
     } else {
       alert("Você não pode apagar mensagens de outro usuário >:(");
     }
-    changeBackground();
+    setBackgroundSignal(!backgroundSignal);
   }
 
   function changeBackground() {
@@ -216,28 +216,7 @@ export default function ChatPage() {
     <Head>
         <title>{headTitle || appConfig.name}</title>
       </Head>
-    <Box
-      styleSheet={{
-        display: "flex",
-        alignItems: { xs: "center", lg: "flex-start" },
-        justifyContent: "flex-end",
-        flexDirection: {
-          xs: "column",
-          lg: "row",
-        },
-        backgroundColor: "#091B15",
-        backgroundImage: `url(${gifUrl})`,
-        minHeight: "100%",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        maxHeight: { xs: "calc(100vh + 72px + 16px)", lg: "100vh" },
-        transition: "all 0.05s",
-        padding: {
-          xs: "24px",
-          md: "24px",
-        },
-      }}
-    >
+    <Background changeSignal={backgroundSignal}>
       <MenuBar loggedUser={loggedUser} />
 
       <Box
@@ -509,7 +488,7 @@ export default function ChatPage() {
           </Box>
         </Window>
       </Box>
-    </Box>
+    </Background>
     </>
   );
 }

@@ -6,19 +6,20 @@ import { Window } from "../src/components/Window";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import { MenuBar } from "../src/components/MenuBar";
+import { Background } from "../src/components/Background";
 
 export default function ProfilePage() {
-  const routing = useRouter();
-  const loggedUser = routing.query.username;
-  const [counter, setCounter] = React.useState(0);
-  const [isLoaded, setIsLoaded] = React.useState("");
-  const [userData, setUserData] = React.useState({
+  const routing = useRouter(),
+  loggedUser = routing.query.username,
+  [counter, setCounter] = React.useState(0),
+  [isLoaded, setIsLoaded] = React.useState(""),
+  [userData, setUserData] = React.useState({
     name: "",
     followers: 0,
     location: "",
     bio: "",
-  });
-  const [gifUrl, setGifUrl] = React.useState("/static/images/frame-1.png");
+  }),
+  [backgroundSignal, setBackgroundSignal] = React.useState('');;
 
   React.useEffect(() => {
     if (counter < 10) {
@@ -37,7 +38,7 @@ export default function ProfilePage() {
           });
 
         setIsLoaded(!isLoaded);
-        changeBackground();
+        setBackgroundSignal(!backgroundSignal);
       } else {
         setCounter(counter + 1);
       }
@@ -47,43 +48,8 @@ export default function ProfilePage() {
     }
   }, [counter]);
 
-  function changeBackground() {
-    const randomNumber = Math.floor(Math.random() * 3);
-
-    if (gifUrl.endsWith(".gif")) {
-      setGifUrl(`/static/images/frame-${randomNumber}.png`);
-    } else {
-      setGifUrl("/static/images/background-1280-30.gif");
-
-      const gifTimer = setTimeout(function () {
-        setGifUrl(`/static/images/frame-${randomNumber}.png`);
-      }, 2000);
-    }
-  }
-
   return (
-    <Box
-      styleSheet={{
-        display: "flex",
-        alignItems: { xs: "center", lg: "flex-start" },
-        justifyContent: "flex-end",
-        flexDirection: {
-          xs: "column",
-          lg: "row",
-        },
-        backgroundColor: "#091B15",
-        backgroundImage: `url(${gifUrl})`,
-        minHeight: "100%",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        maxHeight: { xs: "calc(100vh + 72px + 16px)", lg: "100vh" },
-        transition: "all 0.05s",
-        padding: {
-          xs: "24px",
-          md: "48px",
-        },
-      }}
-    >
+    <Background changeSignal={backgroundSignal}>
       <MenuBar loggedUser={loggedUser} />
 
       <Box
@@ -381,6 +347,6 @@ export default function ProfilePage() {
           </Box>
         </Window>
       </Box>
-    </Box>
+    </Background>
   );
 }
