@@ -1,11 +1,17 @@
-import { Box, Text, Image } from "@skynexui/components";
+import { Box, Text, Image, Button } from "@skynexui/components";
 import React from "react";
 import appConfig from "../../config.json";
 import { DeleteMessage } from "./DeleteMessage";
 import { UserInfo } from "./UserInfo";
 
 export function MessageList(props) {
-  const [userInfoState, setUserInfoState] = React.useState(false);
+  const [userInfoState, setUserInfoState] = React.useState(false),
+  [isMessagesLoaded, setIsMessagesLoaded] = React.useState("none");
+
+  React.useEffect(() => {
+    if (props.messageList.length === 0) return;
+    setIsMessagesLoaded("flex");
+  },[props.messageList])
 
   return (
     <Box
@@ -23,6 +29,7 @@ export function MessageList(props) {
           overflowY: "scroll",
           display: "flex",
           flexDirection: "column-reverse",
+          alignItems: "center",
           flex: 1,
           color: appConfig.theme.colors.neutrals["700"],
           width: "100%",
@@ -300,6 +307,38 @@ export function MessageList(props) {
               );
             })
           : "Algo deu errado..."}
+        
+        <Button
+          colorVariant="neutral"
+          label="Carregar mais"
+          rounded="none"
+          onClick={() => {
+            props.loadMessages();
+          }}
+          styleSheet={{
+            backgroundColor: appConfig.theme.colors.neutrals["100"],
+            borderRadius: "2px",
+            border: "1px solid",
+            borderTopColor: appConfig.theme.colors.neutrals["400"],
+            borderLeftColor: appConfig.theme.colors.neutrals["400"],
+            borderRightColor: appConfig.theme.colors.neutrals["400"],
+            borderBottomColor: appConfig.theme.colors.neutrals["400"],
+            boxShadow:
+              "inset 2px 3px 1px 0px rgba(255,255,255,1), inset -2px -3px 1px 0px rgba(0,0,0,0.16)",
+            paddingTop: "6px",
+            paddingBottom: "6px",
+            minHeight: "30px",
+            maxWidth: "128px",
+            margin: "16px",
+            display: isMessagesLoaded
+          }}
+          buttonColors={{
+            contrastColor: appConfig.theme.colors.neutrals["900"],
+            mainColor: appConfig.theme.colors.neutrals["100"],
+            mainColorLight: appConfig.theme.colors.neutrals["100"],
+            mainColorStrong: appConfig.theme.colors.neutrals["200"],
+          }}
+        />
       </Box>
     </Box>
   );

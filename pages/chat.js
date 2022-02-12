@@ -128,6 +128,26 @@ export default function ChatPage() {
       }
   }, [routing.isReady, selectedChat]);
 
+  function addMoreMessages() {
+    supabaseClient
+          .from("global-chat")
+          .select("*")
+          .filter('chat_id', 'in', `(${selectedChat})`)
+          .range(messageTree.length, messageTree.length + 19)
+          .order("id", { ascending: false })
+          .then(({ data }) => {
+            setMessageTree((actualTree) => {
+              return [ ...actualTree, ...data];
+            });
+            setReplyMessageID(0);
+            setReplyMessage([{ id: "", de: "", texto: "", created_at: "", chat_id: ""}]);
+            setReplyIsOpen(false);
+            //setIsLoaded(!isLoaded);
+            setBackgroundSignal(!backgroundSignal);
+
+          });
+  }
+
   function handleNewMessage(newMessage, replyNewMessage) {
     const messageData = {
       de: loggedUser,
@@ -321,6 +341,7 @@ export default function ChatPage() {
                   delete={deleteMessage}
                   loggedUser={loggedUser}
                   replySelector={selectReply}
+                  loadMessages={addMoreMessages}
                 />
 
                 {replyIsOpen && (
