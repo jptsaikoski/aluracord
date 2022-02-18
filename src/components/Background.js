@@ -33,7 +33,7 @@ export function Background(props) {
           zIndex: "1",
           display: "flex",
           alignItems: { xs: "center", lg: "flex-start" },
-          justifyContent: "flex-end",
+          justifyContent: "center",
           flexDirection: {
             xs: "column",
             lg: "row",

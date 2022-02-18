@@ -23,7 +23,7 @@ function realtimeMessageUpdate(addMessage) {
 export default function ChatPage() {
   const routing = useRouter(),
   loggedUser = routing.query.username,
-  [isLoaded, setIsLoaded] = React.useState(true),
+  [isLoaded, setIsLoaded] = React.useState(''),
   [replyIsOpen, setReplyIsOpen] = React.useState(false),
   [replyMessageID, setReplyMessageID] = React.useState(0),
   [replyMessage, setReplyMessage] = React.useState([
@@ -63,7 +63,7 @@ export default function ChatPage() {
               setReplyMessageID(0);
               setReplyMessage([{ id: "", de: "", texto: "", created_at: "", chat_id: ""}]);
               setReplyIsOpen(false);
-              //setIsLoaded(!isLoaded);
+              setIsLoaded(!isLoaded);
               setBackgroundSignal(!backgroundSignal);
 
           });
@@ -115,9 +115,6 @@ export default function ChatPage() {
         const windowFocusHandler = () => {
               window.addEventListener("focus", onFocus);
               onFocus();
-              return () => {
-                  window.removeEventListener("focus", onFocus);
-              }
         }
 
         windowFocusHandler();
@@ -126,6 +123,10 @@ export default function ChatPage() {
         alert("Você precisa estar logado para acessar essa página.");
       routing.push("/");
       }
+
+      return () => {
+        window.removeEventListener("focus", onFocus);
+    }
   }, [routing.isReady, selectedChat]);
 
   function addMoreMessages() {
@@ -233,10 +234,10 @@ export default function ChatPage() {
 
   return (
     <>
-    <Head>
+      <Head>
         <title>{headTitle || appConfig.name}</title>
       </Head>
-    <Background changeSignal={backgroundSignal}>
+      <Background changeSignal={backgroundSignal}>
       <MenuBar loggedUser={loggedUser} />
 
       <Box
@@ -319,7 +320,7 @@ export default function ChatPage() {
                     height: 24px;
                     float: left;
                     background-color: ${appConfig.theme.colors.neutrals[400]};
-                    animation: load 4s;
+                    animation: load 5s;
                   }
                 `}</style>
               </Box>

@@ -65,10 +65,10 @@ export function MessageList(props) {
                   ? replyDateUTC.toLocaleString()
                   : "";
               return (
-                <Box
+                <li
                   key={message.id}
-                  tag="li"
-                  styleSheet={{
+                  id={'message-' + message.id}
+                  style={{
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "flex-start",
@@ -87,8 +87,10 @@ export function MessageList(props) {
                   message.para != undefined &&
                   message.para != null &&
                   message.para != 0 ? (
-                    <Box
-                      styleSheet={{
+                    <a
+                      href={'#message-' + replyMessageFinal[0].id}
+                      style={{
+                        display: "block",
                         overflow: "hidden",
                         width: "100%",
                         minHeight: "36px",
@@ -100,6 +102,8 @@ export function MessageList(props) {
                         borderColor: appConfig.theme.colors.neutrals[400],
                         borderLeftColor: appConfig.theme.colors.neutrals[400],
                         borderRadius: "2px",
+                        textDecoration: "none",
+                        cursor: "pointer",
                       }}
                     >
                       <Box
@@ -195,7 +199,7 @@ export function MessageList(props) {
                           )}
                         </Box>
                       </Box>
-                    </Box>
+                    </a>
                   ) : (
                     ""
                   )}
@@ -303,7 +307,7 @@ export function MessageList(props) {
                       <DeleteMessage deleteSignal={deleteMessageSignal} />
                     )}
                   </Box>
-                </Box>
+                </li>
               );
             })
           : "Algo deu errado..."}
