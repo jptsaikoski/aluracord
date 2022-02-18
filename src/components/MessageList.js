@@ -66,22 +66,9 @@ export function MessageList(props) {
                   : "";
               return (
                 <li
+                  className="message__item"
                   key={message.id}
                   id={'message-' + message.id}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                    width: "100%",
-                    border: "1px solid",
-                    borderColor: "rgba(0,0,0,0)",
-                    hover: {
-                      border: "1px solid",
-                      borderColor: appConfig.theme.colors.neutrals[400],
-                    },
-                    padding: "6px",
-                  }}
                 >
                   {message.para != "" &&
                   message.para != undefined &&
@@ -344,6 +331,24 @@ export function MessageList(props) {
           }}
         />
       </Box>
+      
+      <style jsx>{`
+        .message__item {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-start;
+          width: 100%;
+          border: 1px solid;
+          border-color: rgba(0,0,0,0);
+          padding: 6px;
+        }
+        
+        .message__item:hover {
+          border: 1px solid;
+          border-color: ${appConfig.theme.colors.neutrals[400]};
+        }
+      `}</style>
     </Box>
   );
 }
