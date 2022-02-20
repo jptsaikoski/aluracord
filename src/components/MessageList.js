@@ -118,6 +118,8 @@ export function MessageList(props) {
                           alignItems: "flex-start",
                           width: "100%",
                           padding: "6px",
+                          maxHeight: "72px",
+                          overflow: "hidden",
                         }}
                       >
                         <Box
@@ -131,6 +133,8 @@ export function MessageList(props) {
                             whiteSpace: "wrap",
                             wordBreak: "break-word",
                             fontSize: "14px",
+                            maxHeight: "56px",
+                            overflow: "hidden",
                           }}
                         >
                           <Box
@@ -170,7 +174,7 @@ export function MessageList(props) {
                             >
                               {replyMessageFinal[0].de}
                             </Text>
-                            <Text
+                            {/* <Text
                               styleSheet={{
                                 fontSize: "12px",
                                 marginLeft: "8px",
@@ -180,7 +184,7 @@ export function MessageList(props) {
                               tag="span"
                             >
                               {replyDate}
-                            </Text>
+                            </Text> */}
                           </Box>
                           {replyMessageFinal[0].texto.startsWith(
                             ":sticker:"

@@ -11,11 +11,16 @@ import { Background } from "../src/components/Background";
 import { supabaseClient } from "../src/components/Supabase";
 import Head from "next/head";
 
-function realtimeMessageUpdate(addMessage) {
+function realtimeMessageUpdate(messageToHandle) {
   return supabaseClient
     .from("global-chat")
-    .on("INSERT", (newMessage) => {
-      addMessage(newMessage.new);
+    .on("INSERT", (message) => {
+      //console.log("Adicionada: ", message);
+      messageToHandle(message);
+    })
+    .on("DELETE", (message) => {
+      //console.log("Deletada: ", message);
+      messageToHandle(message);
     })
     .subscribe();
 }
@@ -68,26 +73,43 @@ export default function ChatPage() {
 
           });
 
-        realtimeMessageUpdate((newMessage) => {
-          setMessageTree((actualTree) => {
-            //Notificações -
-            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-              console.log('Este dispositivo não suporta notificações.');
-            } else if (newMessage.de !== loggedUser) {
+        realtimeMessageUpdate((message) => {
+          if (message.eventType === 'INSERT') {
 
-              const messageNotification = new Notification(newMessage.de + ' - Aluracord', {
-                body: newMessage.texto,
-                icon: `https://github.com/${newMessage.de}.png`,
+            setMessageTree((actualTree) => {
+              //Notificações -
+              if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                console.log('Este dispositivo não suporta notificações.');
+              } else if (message.new.de !== loggedUser) {
+  
+                const messageNotification = new Notification(message.new.de + ' - Aluracord', {
+                  body: message.new.texto,
+                  icon: `https://github.com/${message.new.de}.png`,
+                });
+                
+                setHeadTitle("*" + appConfig.name);
+  
+              }
+              //Notificações --
+  
+              return [message.new, ...actualTree];
+  
+            });
+
+            } else if (message.eventType === 'DELETE') {
+
+              setMessageTree((actualTree) => {
+
+                const modifiedMessageTree = actualTree.filter((deletedMessage) => {
+  
+                    return deletedMessage.id != message.old.id;
+  
+                });
+                
+                return modifiedMessageTree;
+
               });
-              
-              setHeadTitle("*" + appConfig.name);
-
             }
-            //Notificações --
-
-            return [newMessage, ...actualTree];
-
-          });
         });
 
         
@@ -107,7 +129,7 @@ export default function ChatPage() {
         checkNotificationPermission();
         
         const onFocus = () => {
-          if (headTitle !== appConfig.name) {
+          if (headTitle != appConfig.name) {
             setHeadTitle(appConfig.name);
           }
         };
@@ -202,20 +224,6 @@ export default function ChatPage() {
       alert("Você não pode apagar mensagens de outro usuário >:(");
     }
     setBackgroundSignal(!backgroundSignal);
-  }
-
-  function changeBackground() {
-    const randomNumber = Math.floor(Math.random() * 3);
-
-    if (gifUrl.endsWith(".gif")) {
-      setGifUrl(`/static/images/frame-${randomNumber}.png`);
-    } else {
-      setGifUrl("/static/images/background-1280-30.gif");
-
-      const gifTimer = setTimeout(function () {
-        setGifUrl(`/static/images/frame-${randomNumber}.png`);
-      }, 2000);
-    }
   }
 
   function selectReply(messageID) {
@@ -362,7 +370,6 @@ export default function ChatPage() {
                   >
                     <Box
                       key={replyMessage[0].id}
-                      tag="li"
                       styleSheet={{
                         display: "flex",
                         flexDirection: "row",
@@ -417,7 +424,7 @@ export default function ChatPage() {
                           >
                             {replyMessage[0].de}
                           </Text>
-                          <Text
+                          {/* <Text
                             styleSheet={{
                               fontSize: "12px",
                               marginLeft: "8px",
@@ -427,7 +434,7 @@ export default function ChatPage() {
                             tag="span"
                           >
                             {replyMessage[0].created_at.substring(0, 10)}
-                          </Text>
+                          </Text> */}
                         </Box>
                         {replyMessage[0].texto.startsWith(":sticker:") ? (
                           <Image
