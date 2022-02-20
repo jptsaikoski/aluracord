@@ -63,7 +63,7 @@ export default function ChatPage() {
               setReplyMessageID(0);
               setReplyMessage([{ id: "", de: "", texto: "", created_at: "", chat_id: ""}]);
               setReplyIsOpen(false);
-              setIsLoaded(!isLoaded);
+              setIsLoaded(true);
               setBackgroundSignal(!backgroundSignal);
 
           });
@@ -80,7 +80,7 @@ export default function ChatPage() {
                 icon: `https://github.com/${newMessage.de}.png`,
               });
               
-              setHeadTitle('Nova mensagem recebida!');
+              setHeadTitle("*" + appConfig.name);
 
             }
             //Notificações --

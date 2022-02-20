@@ -65,18 +65,33 @@ export function MessageList(props) {
                   ? replyDateUTC.toLocaleString()
                   : "";
               return (
-                <li
-                  className="message__item"
+                <Box
+                  tag="li"
                   key={message.id}
                   id={'message-' + message.id}
+                  styleSheet={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                    width: "100%",
+                    border: "1px solid",
+                    borderColor: "rgba(0,0,0,0)",
+                    padding: "6px",
+                    hover: {
+                      border: "1px solid",
+                      borderColor: appConfig.theme.colors.neutrals[400],
+                    }
+                  }}
                 >
                   {message.para != "" &&
                   message.para != undefined &&
                   message.para != null &&
                   message.para != 0 ? (
-                    <a
+                    <Box
+                      tag="a"
                       href={'#message-' + replyMessageFinal[0].id}
-                      style={{
+                      styleSheet={{
                         display: "block",
                         overflow: "hidden",
                         width: "100%",
@@ -186,7 +201,7 @@ export function MessageList(props) {
                           )}
                         </Box>
                       </Box>
-                    </a>
+                    </Box>
                   ) : (
                     ""
                   )}
@@ -294,7 +309,7 @@ export function MessageList(props) {
                       <DeleteMessage deleteSignal={deleteMessageSignal} />
                     )}
                   </Box>
-                </li>
+                </Box>
               );
             })
           : "Algo deu errado..."}
@@ -331,24 +346,6 @@ export function MessageList(props) {
           }}
         />
       </Box>
-      
-      <style jsx>{`
-        .message__item {
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          align-items: flex-start;
-          width: 100%;
-          border: 1px solid;
-          border-color: rgba(0,0,0,0);
-          padding: 6px;
-        }
-        
-        .message__item:hover {
-          border: 1px solid;
-          border-color: ${appConfig.theme.colors.neutrals[400]};
-        }
-      `}</style>
     </Box>
   );
 }

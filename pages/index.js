@@ -75,22 +75,6 @@ export default function PaginaInicial() {
 
   return (
     <>
-      {/* <Box
-        styleSheet={{
-          display: "flex",
-          alignItems: "flex-end",
-          justifyContent: "flex-end",
-          backgroundColor: "#091B15",
-          backgroundImage: `url(${gifUrl})`,
-          minHeight: "100%",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          padding: {
-            xs: "24px",
-            md: "48px",
-          },
-        }}
-      > */}
       <Background changeSignal={backgroundSignal}>
         <Box
           styleSheet={{
@@ -150,6 +134,7 @@ export default function PaginaInicial() {
                     setUsername(valor);
                     changeName(valor);
                     getUserData(valor);
+                    setIsRealUser(true);
                   }}
                   styleSheet={{
                     borderRadius: "2px",
@@ -224,20 +209,21 @@ export default function PaginaInicial() {
                 <Text
                   variant="body4"
                   styleSheet={{
-                    color: appConfig.theme.colors.neutrals[900],
+                    color: appConfig.theme.colors.primary[500],
                     backgroundColor: "",
                     padding: "3px 10px",
                     borderRadius: "1000px",
                     fontWeight: "500",
                     fontSize: "16px",
+                    textAlign: "center"
                   }}
                 >
                   {userData.name || usernameValid || "Mac OS 7.5"}
                 </Text>
-                <Text styleSheet={{ marginBottom: "3px", fontSize: "14px" }}>
+                <Text styleSheet={{ marginBottom: "3px", fontSize: "14px", textAlign: "center" }}>
                   Seguidores: {userData.followers}
                 </Text>
-                <Text styleSheet={{ marginBottom: "3px", fontSize: "14px" }}>
+                <Text styleSheet={{ marginBottom: "3px", fontSize: "14px", textAlign: "center" }}>
                   {userData.location || "Silicon Valley, CA"}
                 </Text>
               </Box>
