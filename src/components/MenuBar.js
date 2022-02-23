@@ -1,15 +1,251 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Box, Image } from "@skynexui/components";
+import { Box, Image, Button } from "@skynexui/components";
 import appConfig from "../../config.json";
 
 export function MenuBar(props) {
-  const loggedUser = props.loggedUser;
-  const routing = useRouter();
+  const loggedUser = props.loggedUser,
+    routing = useRouter(),
+    [isMenuOpen, setIsMenuOpen] = React.useState('');
+
 
   return (
     <>
       <Box
+      tag="nav"
+        styleSheet={{
+          display: {
+            xs: "flex",
+            lg: "none"
+          },
+          width: "100%",
+          height: "32px",
+          backgroundColor: appConfig.theme.colors.neutrals["100"],
+          borderBottom: "1px solid",
+          borderColor: appConfig.theme.colors.neutrals["700"],
+          boxShadow: "inset 0px -2px 1px 0px rgba(0,0,0,0.16)",
+          position: "absolute",
+          top: "0",
+          left: "0",
+          right: "0",
+          padding: "6px 16px",
+        }}
+      >
+        <Box
+          tag="ul"
+          styleSheet={{
+            width: "100%",
+            height: "20px",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            tag="li"
+            styleSheet={{
+              position: "relative",
+              height: "20px",
+              display: "flex"
+            }}
+          >
+            <Button
+              rounded="none"
+              styleSheet={{
+                backgroundColor: "rgba(0,0,0,0)",
+                width: "20px",
+                height: "20px",
+                padding: "0px",
+                backgroundImage: "url(/static/images/apple-icon.png)",
+                backgroundSize: "20px",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center -2px",
+                marginRight: "16px",
+              }}
+              buttonColors={{
+                contrastColor: appConfig.theme.colors.neutrals["900"],
+                mainColor: appConfig.theme.colors.neutrals["100"],
+                mainColorLight: appConfig.theme.colors.neutrals["100"],
+                mainColorStrong: appConfig.theme.colors.neutrals["100"],
+              }}
+            />
+          </Box>
+
+
+          <Box
+            tag="li"
+            styleSheet={{
+              position: "relative",
+              height: "20px",
+              display: "flex"
+            }}
+          >
+            <Button
+              rounded="none"
+              styleSheet={{
+                position: "relative",
+                backgroundColor: "rgba(0,0,0,0)",
+                height: "20px",
+                padding: "0px",
+                marginRight: "16px",
+              }}
+              buttonColors={{
+                contrastColor: appConfig.theme.colors.neutrals["900"],
+                mainColor: appConfig.theme.colors.neutrals["100"],
+                mainColorLight: appConfig.theme.colors.neutrals["100"],
+                mainColorStrong: appConfig.theme.colors.neutrals["100"],
+              }}
+              label="Menu"
+              onClick={() => {
+                setIsMenuOpen(!isMenuOpen);
+              }}
+            />
+            
+            {isMenuOpen &&
+            <Box
+              tag="ul"
+              styleSheet={{
+                zIndex: "2000",
+                position: "absolute",
+                top: "25px",
+                left: "0",
+                padding: "8px 8px",
+                backgroundColor: appConfig.theme.colors.neutrals[100],
+                border: "1px solid",
+                borderColor: appConfig.theme.colors.neutrals["700"],
+              }}
+            >
+
+              <Box
+                tag="li"
+                styleSheet={{
+                  minWidth: "100px",
+                  marginBottom: "8px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  styleSheet={{
+                    width: "16px",
+                    height: "16px",
+                    display: "block",
+                    marginRight: "8px"
+                  }}
+                  src={"/static/images/chat-icon-64.png"}
+                />
+                <Button
+                  rounded="none"
+                  styleSheet={{
+                    position: "relative",
+                    backgroundColor: "rgba(0,0,0,0)",
+                    padding: "0px",
+                  }}
+                  buttonColors={{
+                    contrastColor: appConfig.theme.colors.neutrals["900"],
+                    mainColor: appConfig.theme.colors.neutrals["100"],
+                    mainColorLight: appConfig.theme.colors.neutrals["100"],
+                    mainColorStrong: appConfig.theme.colors.neutrals["100"],
+                  }}
+                  label="Chat" 
+                  onClick={(event) => {
+                    routing.push(`/chat?username=${loggedUser}`);
+                  }}
+                />
+              </Box>
+
+              <Box
+                tag="li"
+                styleSheet={{
+                  minWidth: "100px",
+                  marginBottom: "8px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  styleSheet={{
+                    width: "16px",
+                    height: "16px",
+                    borderRadius: "1px",
+                    border: "1px solid",
+                    borderColor: appConfig.theme.colors.neutrals[400],
+                    display: "block",
+                    marginRight: "8px"
+                  }}
+                  src={`https://github.com/${loggedUser}.png`}
+                />
+                <Button
+                  rounded="none"
+                  styleSheet={{
+                    position: "relative",
+                    backgroundColor: "rgba(0,0,0,0)",
+                    padding: "0px",
+                  }}
+                  buttonColors={{
+                    contrastColor: appConfig.theme.colors.neutrals["900"],
+                    mainColor: appConfig.theme.colors.neutrals["100"],
+                    mainColorLight: appConfig.theme.colors.neutrals["100"],
+                    mainColorStrong: appConfig.theme.colors.neutrals["100"],
+                  }}
+                  label="Meu Perfil"
+                  onClick={(event) => {
+                    routing.push(`/profile?username=${loggedUser}`);
+                  }}
+                />
+              </Box>
+
+              <Box
+                tag="li"
+                styleSheet={{
+                  minWidth: "100px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  styleSheet={{
+                    width: "16px",
+                    height: "16px",
+                    display: "block",
+                    marginRight: "8px"
+                  }}
+                  src={"/static/images/about-icon-64.png"}
+                />
+                <Button
+                  rounded="none"
+                  styleSheet={{
+                    position: "relative",
+                    backgroundColor: "rgba(0,0,0,0)",
+                    padding: "0px",
+                  }}
+                  buttonColors={{
+                    contrastColor: appConfig.theme.colors.neutrals["900"],
+                    mainColor: appConfig.theme.colors.neutrals["100"],
+                    mainColorLight: appConfig.theme.colors.neutrals["100"],
+                    mainColorStrong: appConfig.theme.colors.neutrals["100"],
+                  }}
+                  label="Sobre"
+                  onClick={(event) => {
+                    routing.push(`/about?username=${loggedUser}`);
+                  }}
+                />
+              </Box>
+
+            </Box>
+            }
+          </Box>
+
+        </Box>
+
+
+        
+        
+
+      </Box>
+
+
+      <Box
+      tag="nav"
         styleSheet={{
           minWidth: {
             xs: "auto",
@@ -23,7 +259,10 @@ export function MenuBar(props) {
             xs: "60px",
             lg: "auto",
           },
-          display: "flex",
+          display: {
+            xs: "none",
+            lg: "flex"
+          },
           flexDirection: "column",
           borderRadius: "2px",
           backgroundColor: appConfig.theme.colors.neutrals[800],

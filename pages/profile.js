@@ -52,7 +52,7 @@ export default function ProfilePage() {
         styleSheet={{
           height: "100%",
           maxHeight: {
-            xs: "calc(100% - 72px - 16px)",
+            xs: "calc(100% - 24px)",
             lg: "100%",
           },
           width: "100%",

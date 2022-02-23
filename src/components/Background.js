@@ -33,7 +33,10 @@ export function Background(props) {
           zIndex: "1",
           display: "flex",
           alignItems: { xs: "center", lg: "flex-start" },
-          justifyContent: "center",
+          justifyContent: {
+            xs: "flex-end",
+            lg: "center"
+          },
           flexDirection: {
             xs: "column",
             lg: "row",
@@ -43,11 +46,15 @@ export function Background(props) {
           backgroundSize: "cover",
           minHeight: "100%",
           width: "100%",
-          maxHeight: { xs: "calc(100vh + 72px + 16px)", lg: "100vh" },
+          maxHeight: { xs: "calc(100vh + 24px)", lg: "100vh" },
           padding: {
             xs: "24px",
             md: "24px",
           },
+          paddingTop: {
+            xs: "32px",
+            lg: "24px"
+          }
         }}
       >{props.children}</Box>
     </Box>

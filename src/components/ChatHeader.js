@@ -63,6 +63,7 @@ export function ChatHeader(props) {
               marginLeft: '8px',
           }}
         ></Select>
+        
       </Box>
     </>
   );
