@@ -8,7 +8,8 @@ import { LoginBox } from "../src/components/LoginBox";
 
 export default function PaginaInicial() {
   const routing = useRouter(),
-  [backgroundSignal, setBackgroundSignal] = React.useState('');
+  [backgroundSignal, setBackgroundSignal] = React.useState(''),
+  [isTrashOpen, setIsTrashOpen] = React.useState('');
 
   React.useEffect(() => {
     setBackgroundSignal(!backgroundSignal);
@@ -16,6 +17,10 @@ export default function PaginaInicial() {
 
   function backgroundChange() {
     setBackgroundSignal(!backgroundSignal);
+  }
+
+  function closeTrash() {
+    setIsTrashOpen(false);
   }
 
 
@@ -164,15 +169,100 @@ export default function PaginaInicial() {
                 xs: "none",
                 lg: "flex"
               },
-              justifyContent: "flex-start",
+              flexDirection: "column",
+              justifyContent: "space-between",
               paddingLeft: "16px",
             }}
           >
+
+            <Box
+            tag="button"
+              styleSheet={{
+                display: {
+                  xs: "none",
+                  lg: "block"
+                },
+                height: "72px",
+                alignSelf: "flex-end",
+                backgroundColor: "rgba(0,0,0,0)",
+                background: "url(/static/images/trash-icon-older.png) no-repeat top",
+                backgroundSize: "48px",
+                cursor: "pointer",
+                border: "none",
+                padding: "52px 3px 3px 3px",
+                focus: {
+                  backgroundColor: appConfig.theme.colors.primary[800],
+                  backgroundBlendMode: "hard-light"
+                },
+              }}
+              onClick={() => {
+                setIsTrashOpen(true);
+              }}
+            >
+              <Text
+              styleSheet={{
+                color: appConfig.theme.colors.neutrals["700"],
+                backgroundColor: appConfig.theme.colors.neutrals["100"]
+              }}
+              >Lixeira</Text>
+            </Box>
+
+              {isTrashOpen &&
+              <Window 
+                windowTitle="Lixeira"
+                closeButton={closeTrash}
+                styleRules={{
+                  zIndex: "3000",
+                  position: "absolute",
+                  top: "10%",
+                  right: "50%",
+                  marginRight: "-300px",
+                  width: "600px",
+                  height: "400px"
+                }}
+              >
+                <Box
+                  styleSheet={{
+                    width: "100%",
+                    height: "100%",
+                    padding: "32px",
+                    borderRadius: "2px",
+                    display: "flex",
+                    backgroundColor: appConfig.theme.colors.neutrals["100"],
+                  }}
+                >
+
+                  <Box
+                    tag="button"
+                    styleSheet={{
+                      height: "72px",
+                      backgroundColor: "rgba(0,0,0,0)",
+                      background: "url(/static/images/text-icon.png) no-repeat top",
+                      backgroundSize: "48px",
+                      cursor: "pointer",
+                      border: "none",
+                      padding: "52px 3px 3px 3px",
+                      focus: {
+                        backgroundColor: appConfig.theme.colors.primary[800],
+                        backgroundBlendMode: "hard-light",
+                        color: appConfig.theme.colors.neutrals["100"],
+                      },
+                    }}
+                    onClick={() => {
+                      window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank");
+                    }}
+                  >
+                    importante
+                  </Box>
+
+                </Box>
+              </Window>
+              }
             <Box
               styleSheet={{
                 width: "100%",
                 maxWidth: "600px",
-                alignSelf: "flex-end"
+                alignSelf: "flex-start"
               }}
             >
               <LoginBox backgroundChange={backgroundChange}/>
